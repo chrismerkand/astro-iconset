@@ -4,9 +4,10 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "build": "pnpm --filter astro-iconset --filter www run build",
+    "build": "pnpm --filter astro-iconset --filter site run build",
     "dev": "pnpm -r run dev",
-    "lint": "prettier \"**/*.{js,ts,md,json}\"",
+    "lint": "prettier --check \"**/*.{js,ts,md,json}\"",
+    "format": "prettier --write \"**/*.{js,ts,md,json}\"",
     "version": "changeset version && pnpm install --no-frozen-lockfile --lockfile-only"
   },
   "repository": {

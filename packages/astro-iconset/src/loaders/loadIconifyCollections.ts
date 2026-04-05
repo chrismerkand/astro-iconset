@@ -20,9 +20,10 @@ export default async function loadIconifyCollections({
 }: LoadOptions): Promise<AstroIconCollectionMap> {
   const installedCollections = await detectInstalledCollections(root);
   // If icons are installed locally but not explicitly included, include the whole pack
+  const resolved = { ...include };
   for (let name of installedCollections) {
-    if (include[name] !== undefined) continue;
-    include[name] = ["*"];
+    if (resolved[name] !== undefined) continue;
+    resolved[name] = ["*"];
   }
   const possibleCollections = await Promise.all(
     installedCollections.map((collectionName) =>
@@ -41,7 +42,7 @@ export default async function loadIconifyCollections({
         return acc;
       }
 
-      const requestedIcons = Array.from(new Set(include[name]));
+      const requestedIcons = Array.from(new Set(resolved[name]));
 
       // Requested entire icon collection
       if (requestedIcons.length === 1 && requestedIcons[0] === "*") {

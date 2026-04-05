@@ -22,17 +22,14 @@ export async function loadLocalCollectionFromDir(
     keyword,
   });
 
-  await local.forEach(async (name, type) => {
-    if (type !== "icon") {
-      return;
-    }
+  const names: string[] = [];
+  local.forEach((name, type) => {
+    if (type === "icon") names.push(name);
+  });
 
+  await Promise.all(names.map(async (name) => {
     const svg = local.toSVG(name);
-    if (svg === null) {
-      local.remove(name);
-      return;
-    }
-
+    if (!svg) { local.remove(name); return; }
     try {
       await optimizeSvg(svg, options);
     } catch (err) {
@@ -40,9 +37,8 @@ export async function loadLocalCollectionFromDir(
       local.remove(name);
       return;
     }
-
     local.fromSVG(name, svg);
-  });
+  }));
 
   return local.export(true);
 }

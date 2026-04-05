@@ -231,7 +231,8 @@ export function createPlugin(
         return `export default ${JSON.stringify(collections ?? {})};\nexport const config = ${JSON.stringify({ include, localIconSets })}`;
       }
     },
-    configureServer({ watcher, moduleGraph }) {
+    configureServer(server) {
+      const { watcher, moduleGraph } = server;
       for (const r of watchRoots) {
         watcher.add(join(r, "**", "*.svg"));
       }
@@ -241,11 +242,12 @@ export function createPlugin(
           pathIsUnderAnyRoot(filepath, watchRoots) && parsedPath.ext === ".svg";
         const isAstroConfig = parsedPath.name === "astro.config";
         if (!isSvgFileInIconDir && !isAstroConfig) return;
-        console.log(`Local icons changed, reloading`);
+        ctx.logger.info(`Local icons changed, reloading`);
         try {
           collections = undefined;
           await loadFilesystemCollections();
           moduleGraph.invalidateAll();
+          server.ws.send({ type: "full-reload" });
         } catch (ex) {
           ctx.logger.error(
             `[astro-iconset] Failed to reload icon collections: ${ex instanceof Error ? ex.message : String(ex)}`,
