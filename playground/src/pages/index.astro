@@ -1,0 +1,292 @@
+---
+import { Icon } from "astro-iconset/components";
+import Base from "../layouts/base.astro";
+import "../styles/feature-matrix.css";
+
+/** `?icon` — same file as registry “adjustment” (compare pipeline output). */
+import iconAdjustment from "../icons/adjustment.svg?icon";
+/** `?icon` — file only under `src/assets/` (not in iconDir scan). */
+import iconFromAssets from "../assets/import-only.svg?icon";
+import iconAnnotation from "../icons/annotation.svg?icon";
+
+const localByVar = "annotation";
+const iconifyByVar = "bi:stars";
+---
+
+<Base
+  title="astro-iconset — feature matrix"
+  description="Interactive matrix: name (local + Iconify), icon (*.svg?icon), sprite vs inline, sizing, a11y."
+>
+  <a href="#main" class="skip">Skip to content</a>
+
+  <header class="hero">
+    <p class="hero__eyebrow">astro-iconset · demo</p>
+    <h1 id="page-title">Icon feature matrix</h1>
+    <p class="hero__lead">
+      Manual checklist for <code>name</code> (registry), <code>icon</code> (<code>*.svg?icon</code>),
+      Iconify packs, sprite vs inline, sizing, and accessibility props.
+    </p>
+    <nav class="hero__nav" aria-label="Page sections">
+      <a href="#registry-local">Registry · local</a>
+      <a href="#registry-iconify">Registry · Iconify</a>
+      <a href="#import-icon">Import · ?icon</a>
+      <a href="#sprite-inline">Sprite vs inline</a>
+      <a href="#sizing">Sizing</a>
+      <a href="#a11y">Title &amp; desc</a>
+      <a href="#styling">Styling</a>
+      <a href="#repeat">Duplicate / reuse</a>
+    </nav>
+  </header>
+
+  <main id="main" class="main" aria-labelledby="page-title">
+    <!-- Registry: local name (iconDir) -->
+    <section id="registry-local" class="section" aria-labelledby="h-registry-local">
+      <header class="section__head">
+        <h2 id="h-registry-local"><code>name</code> — local directory</h2>
+        <p>
+          Icons from <code>src/icons/</code> via generated <code>virtual:astro-iconset</code>. Short names
+          resolve to the <code>local</code> set; subfolders use <code>logos/…</code>.
+        </p>
+      </header>
+      <ul class="matrix">
+        <li class="matrix__row">
+          <span class="matrix__label">Short name</span>
+          <span class="matrix__sample"><Icon name="adjustment" size={28} /></span>
+          <code class="matrix__code">name="adjustment"</code>
+        </li>
+        <li class="matrix__row">
+          <span class="matrix__label">Dynamic variable</span>
+          <span class="matrix__sample"><Icon name={localByVar} size={28} /></span>
+          <code class="matrix__code">name=&#123;localByVar&#125; → "annotation"</code>
+        </li>
+        <li class="matrix__row">
+          <span class="matrix__label">Nested path</span>
+          <span class="matrix__sample"><Icon name="logos/deno" size={28} /></span>
+          <code class="matrix__code">name="logos/deno"</code>
+        </li>
+        <li class="matrix__row">
+          <span class="matrix__label">Multi-color (local)</span>
+          <span class="matrix__sample"><Icon name="logos/alpine-multi-color" width={72} /></span>
+          <code class="matrix__code">name="logos/alpine-multi-color"</code>
+        </li>
+      </ul>
+    </section>
+
+    <!-- Registry: Iconify -->
+    <section id="registry-iconify" class="section" aria-labelledby="h-registry-iconify">
+      <header class="section__head">
+        <h2 id="h-registry-iconify"><code>name</code> — Iconify</h2>
+        <p>
+          Packs from <code>@iconify-json/*</code> and <code>include</code> (demo uses default detection).
+          Prefix with collection id.
+        </p>
+      </header>
+      <ul class="matrix">
+        <li class="matrix__row">
+          <span class="matrix__label">ic:…</span>
+          <span class="matrix__sample"><Icon name="ic:baseline-account-box" size={32} /></span>
+          <code class="matrix__code">name="ic:baseline-account-box"</code>
+        </li>
+        <li class="matrix__row">
+          <span class="matrix__label">fe:…</span>
+          <span class="matrix__sample"><Icon name="fe:building" size={32} /></span>
+          <code class="matrix__code">name="fe:building"</code>
+        </li>
+        <li class="matrix__row">
+          <span class="matrix__label">Variable</span>
+          <span class="matrix__sample"><Icon name={iconifyByVar} size={32} /></span>
+          <code class="matrix__code">name=&#123;iconifyByVar&#125; → "bi:stars"</code>
+        </li>
+      </ul>
+    </section>
+
+    <!-- Import ?icon -->
+    <section id="import-icon" class="section" aria-labelledby="h-import-icon">
+      <header class="section__head">
+        <h2 id="h-import-icon"><code>icon</code> — <code>*.svg?icon</code></h2>
+        <p>
+          Vite transforms the file to Iconify icon data. <strong>No</strong> entry in <code>iconDir</code> is
+          required for <code>src/assets/import-only.svg</code>; the registry is not scanned for that path.
+        </p>
+      </header>
+      <ul class="matrix">
+        <li class="matrix__row">
+          <span class="matrix__label">Same as registry file</span>
+          <span class="matrix__sample"><Icon icon={iconAdjustment} size={28} /></span>
+          <code class="matrix__code">import … from "../icons/adjustment.svg?icon"</code>
+        </li>
+        <li class="matrix__row">
+          <span class="matrix__label">Assets only</span>
+          <span class="matrix__sample"><Icon icon={iconFromAssets} size={28} /></span>
+          <code class="matrix__code">import … from "../assets/import-only.svg?icon"</code>
+        </li>
+        <li class="matrix__row">
+          <span class="matrix__label">Another file</span>
+          <span class="matrix__sample"><Icon icon={iconAnnotation} size={28} /></span>
+          <code class="matrix__code">import … from "../icons/annotation.svg?icon"</code>
+        </li>
+      </ul>
+    </section>
+
+    <!-- Sprite vs inline -->
+    <section id="sprite-inline" class="section" aria-labelledby="h-sprite-inline">
+      <header class="section__head">
+        <h2 id="h-sprite-inline">Sprite vs <code>is:inline</code></h2>
+        <p>
+          Default: sprite (<code>&lt;symbol&gt;</code> + <code>&lt;use&gt;</code>). Inline: raw body in
+          place (no sprite dedup).
+        </p>
+      </header>
+      <div class="compare">
+        <figure class="compare__card">
+          <figcaption>Registry · sprite</figcaption>
+          <Icon name="ic:outline-star" size={40} />
+        </figure>
+        <figure class="compare__card">
+          <figcaption>Registry · inline</figcaption>
+          <Icon is:inline name="ic:outline-star" size={40} />
+        </figure>
+        <figure class="compare__card">
+          <figcaption>Import · sprite</figcaption>
+          <Icon icon={iconFromAssets} size={40} />
+        </figure>
+        <figure class="compare__card">
+          <figcaption>Import · inline</figcaption>
+          <Icon is:inline icon={iconFromAssets} size={40} />
+        </figure>
+      </div>
+    </section>
+
+    <!-- Sizing -->
+    <section id="sizing" class="section" aria-labelledby="h-sizing">
+      <header class="section__head">
+        <h2 id="h-sizing">Sizing</h2>
+        <p><code>size</code> maps to width and height; explicit <code>width</code> / <code>height</code> override.</p>
+      </header>
+      <div class="compare compare--sizing">
+        <figure class="compare__card">
+          <figcaption><code>size=&#123;24&#125;</code></figcaption>
+          <Icon name="ri:aliens-fill" size={24} />
+        </figure>
+        <figure class="compare__card">
+          <figcaption><code>size=&#123;48&#125;</code></figcaption>
+          <Icon name="ri:aliens-fill" size={48} />
+        </figure>
+        <figure class="compare__card">
+          <figcaption><code>width</code> / <code>height</code></figcaption>
+          <Icon name="ri:aliens-fill" width={56} height={32} />
+        </figure>
+      </div>
+    </section>
+
+    <!-- title desc -->
+    <section id="a11y" class="section" aria-labelledby="h-a11y">
+      <header class="section__head">
+        <h2 id="h-a11y"><code>title</code> &amp; <code>desc</code></h2>
+        <p>Rendered as SVG <code>&lt;title&gt;</code> + <code>&lt;desc&gt;</code> (inspect DOM or use a screen reader).</p>
+      </header>
+      <div class="compare">
+        <figure class="compare__card compare__card--wide">
+          <figcaption>With title + desc</figcaption>
+          <Icon
+            name="ic:baseline-flag"
+            size={48}
+            title="Flag icon"
+            desc="Decorative example for the demo page"
+          />
+        </figure>
+      </div>
+    </section>
+
+    <!-- Styling -->
+    <section id="styling" class="section" aria-labelledby="h-styling">
+      <header class="section__head">
+        <h2 id="h-styling">Styling via <code>data-icon</code> + CSS</h2>
+        <p>
+          Registry icons use the string <code>name</code> as <code>data-icon</code>. Imported icons use a stable
+          <code>import:…</code> key. Use <code>currentColor</code> in icons for theme color.
+        </p>
+      </header>
+      <div class="compare">
+        <figure class="compare__card">
+          <figcaption><code>[data-icon="annotation"]</code></figcaption>
+          <Icon name="annotation" size={40} />
+        </figure>
+        <figure class="compare__card">
+          <figcaption><code>[data-icon^="import:"]</code></figcaption>
+          <Icon icon={iconAnnotation} size={40} />
+        </figure>
+        <figure class="compare__card">
+          <figcaption>Iconify id</figcaption>
+          <Icon name="ic:outline-star" size={40} />
+        </figure>
+      </div>
+    </section>
+
+    <!-- Duplicate reuse -->
+    <section id="repeat" class="section" aria-labelledby="h-repeat">
+      <header class="section__head">
+        <h2 id="h-repeat">Duplicate instances — sprite reuse</h2>
+        <p>Same icon twice on one page: first instance should define the symbol; second reuses <code>&lt;use&gt;</code>.</p>
+      </header>
+      <div class="compare">
+        <figure class="compare__card">
+          <figcaption>Two × same <code>name</code></figcaption>
+          <Icon name="ri:aliens-fill" size={36} />
+          <Icon name="ri:aliens-fill" size={36} />
+        </figure>
+        <figure class="compare__card">
+          <figcaption>Two × same <code>icon</code></figcaption>
+          <Icon icon={iconAnnotation} size={36} />
+          <Icon icon={iconAnnotation} size={36} />
+        </figure>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <p>
+        <a href="/map/">Sprite stress</a> (map page) ·
+        <a href="https://icones.js.org/">Icones</a>
+      </p>
+    </footer>
+  </main>
+</Base>
+
+<style is:global>
+  /**
+   * data-icon styling (demo only — layout lives in ../styles/feature-matrix.css)
+   *
+   * Main idea: <Icon /> puts data-icon={…} on the root <svg>. Monochrome icons use
+   * currentColor, so setting `color` in CSS recolors the glyph. You can target:
+   *
+   * • name="…"     → data-icon is the exact name string (e.g. "annotation", "logos/deno").
+   * • icon={import} → data-icon looks like "import:<hash>" (stable per imported icon).
+   * • name="set:icon" (Iconify) → data-icon is the full id (e.g. "ic:outline-star").
+   *
+   * Below: a broad default, then overrides for each shape so you can see which selector wins.
+   */
+  [data-icon] {
+    color: steelblue;
+  }
+  [data-icon="annotation"] {
+    color: #f472b6;
+  }
+  [data-icon="adjustment"] {
+    color: #a78bfa;
+  }
+  [data-icon="logos/deno"] {
+    color: #12124b;
+  }
+  [data-icon="logos/alpine"] {
+    color: rgb(45, 52, 65);
+  }
+  [data-icon^="import:"] {
+    color: #38bdf8;
+  }
+  [data-icon="ic:outline-star"] {
+    color: #fbbf24;
+  }
+  [data-icon="ic:baseline-account-box"] {
+    color: #7dd3fc;
+  }
+</style>

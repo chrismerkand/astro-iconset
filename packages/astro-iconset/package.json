@@ -1,0 +1,65 @@
+{
+  "name": "astro-iconset",
+  "version": "0.0.1",
+  "type": "module",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./components": "./components/index.ts",
+    "./svg-icon": {
+      "types": "./typings/svg-icon.d.ts"
+    }
+  },
+  "files": [
+    "components",
+    "dist",
+    "typings"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "start": "pnpm run dev"
+  },
+  "author": {
+    "name": "Sudeep",
+    "url": "https://github.com/sudeep2003"
+  },
+  "keywords": [
+    "astro",
+    "astro-integration",
+    "astro-component",
+    "image",
+    "images",
+    "icon",
+    "icons",
+    "iconify",
+    "optimization"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sudeep2003/astro-iconset.git",
+    "directory": "packages/core"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/sudeep2003/astro-iconset/issues"
+  },
+  "homepage": "https://github.com/sudeep2003/astro-iconset#readme",
+  "peerDependencies": {
+    "astro": ">=3.5.0"
+  },
+  "dependencies": {
+    "@iconify/tools": "^5.0.6",
+    "@iconify/types": "^2.0.0",
+    "@iconify/utils": "^3.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "astro": "^6.0.0",
+    "typescript": "^5.0.4",
+    "vite": "^7.0.0"
+  }
+}

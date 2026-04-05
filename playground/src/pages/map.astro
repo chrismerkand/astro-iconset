@@ -1,0 +1,69 @@
+---
+import { Icon } from "astro-iconset/components";
+import Base from "../layouts/base.astro";
+---
+
+<Base title="Sprite stress — astro-iconset" description="Repeated icons to verify sprite symbol reuse.">
+  <main class="map">
+    <p class="map__back"><a href="/">← Feature matrix</a></p>
+    <h1>Sprite stress</h1>
+    <p class="map__lead">
+      Five identical Iconify icons on one page — verify devtools: one <code>&lt;symbol&gt;</code>, multiple
+      <code>&lt;use&gt;</code> (last one styled differently via CSS).
+    </p>
+    <div class="map__row" aria-hidden="true">
+      {Array.from({ length: 5 }).map(() => (
+        <Icon name="ic:outline-star" size={40} />
+      ))}
+    </div>
+  </main>
+</Base>
+
+<style lang="css">
+  .map {
+    padding: 2rem clamp(1rem, 4vw, 3rem);
+    max-width: 48rem;
+    margin: 0 auto;
+  }
+  .map__back {
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-size: 0.85rem;
+    margin: 0 0 1rem;
+  }
+  .map__back a {
+    color: #6ee7b7;
+  }
+  .map h1 {
+    font-family: "Source Serif 4", Georgia, serif;
+    font-size: 1.75rem;
+    margin: 0 0 0.75rem;
+    color: #e6edf3;
+  }
+  .map__lead {
+    color: #8b9cb0;
+    margin: 0 0 1.5rem;
+    max-width: 52ch;
+  }
+  .map__lead :global(code) {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.88em;
+    color: #c4b5fd;
+  }
+  .map__row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: center;
+    padding: 1.25rem;
+    border-radius: 10px;
+    border: 1px solid #2d3848;
+    background: #1a222d;
+  }
+
+  :global([data-icon="ic:outline-star"]) {
+    color: goldenrod;
+  }
+  :global([data-icon="ic:outline-star"]:last-of-type) {
+    color: #64748b;
+  }
+</style>

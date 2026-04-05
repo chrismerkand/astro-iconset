@@ -1,0 +1,169 @@
+---
+/**
+ * Dedicated demo for `iconDir` (string | string[]), `iconDirs`, and `iconDirs.local` docs.
+ * Home page (`index.astro`) stays the general feature matrix — edit this file only for integration tests.
+ */
+import { Icon } from "astro-iconset/components";
+import Base from "../layouts/base.astro";
+import "../styles/feature-matrix.css";
+---
+
+<Base
+  title="astro-iconset — local icon directories"
+  description="iconDir merge, iconDirs prefixes, and astro.config integration reference."
+>
+  <a href="#main" class="skip">Skip to content</a>
+
+  <header class="hero">
+    <p class="hero__eyebrow">astro-iconset · demo</p>
+    <h1 id="page-title">Local icon directories</h1>
+    <p class="hero__lead">
+      Live checks for <code>iconDir</code>, merged folders, and <code>iconDirs</code> prefixes. Configuration
+      is in <code>demo/astro.config.ts</code> (global to the whole demo app).
+    </p>
+    <nav class="hero__nav" aria-label="Page sections">
+      <a href="#registry-local">Examples</a>
+      <a href="#integration-matrix"><code>astro.config</code> matrix</a>
+      <a href="/">← Feature matrix (home)</a>
+    </nav>
+  </header>
+
+  <main id="main" class="main" aria-labelledby="page-title">
+    <section id="registry-local" class="section" aria-labelledby="h-registry-local">
+      <header class="section__head">
+        <h2 id="h-registry-local">Examples</h2>
+        <p>
+          The default <code>local</code> set merges <code>iconDir</code>:
+          <code>src/icons/</code> and <code>src/extra-icons/</code>. Additional roots use
+          <code>iconDirs</code> with a prefix (<code>brand:</code>, <code>ui:</code>).
+        </p>
+      </header>
+      <ul class="matrix">
+        <li class="matrix__row">
+          <span class="matrix__label">From <code>src/icons/</code></span>
+          <span class="matrix__sample"><Icon name="adjustment" size={28} /></span>
+          <code class="matrix__code">name="adjustment"</code>
+        </li>
+        <li class="matrix__row">
+          <span class="matrix__label"><code>iconDir</code> merge (2nd folder only)</span>
+          <span class="matrix__sample"><Icon name="merge-badge" size={28} /></span>
+          <code class="matrix__code">name="merge-badge"</code> · <code>src/extra-icons/merge-badge.svg</code>
+        </li>
+        <li class="matrix__row">
+          <span class="matrix__label"><code>iconDirs.brand</code></span>
+          <span class="matrix__sample"><Icon name="brand:mark" size={28} /></span>
+          <code class="matrix__code">name="brand:mark"</code>
+        </li>
+        <li class="matrix__row">
+          <span class="matrix__label"><code>iconDirs.ui</code></span>
+          <span class="matrix__sample"><Icon name="ui:glyph" size={28} /></span>
+          <code class="matrix__code">name="ui:glyph"</code>
+        </li>
+      </ul>
+    </section>
+
+    <section
+      id="integration-matrix"
+      class="section section--muted"
+      aria-labelledby="h-integration-matrix"
+    >
+      <header class="section__head">
+        <h2 id="h-integration-matrix"><code>astro.config</code> — local icon options</h2>
+        <p>
+          This demo’s integration loads everything that can be combined in one config. Options that cannot be
+          combined are noted in the table.
+        </p>
+      </header>
+      <div class="config-table-wrap">
+        <table class="config-table">
+          <thead>
+            <tr>
+              <th scope="col">Option</th>
+              <th scope="col">In this demo</th>
+              <th scope="col">Notes</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>iconDir</code> (string)</td>
+              <td>—</td>
+              <td>Single folder for <code>local</code> (e.g. <code>"src/icons"</code>). Same idea as a one-element array.</td>
+            </tr>
+            <tr>
+              <td><code>iconDir</code> (string[])</td>
+              <td>Yes</td>
+              <td>
+                <code>["src/icons", "src/extra-icons"]</code> — merged into one <code>local</code> set; duplicate
+                icon keys across folders throw at build time.
+              </td>
+            </tr>
+            <tr>
+              <td><code>iconDirs</code> (no <code>local</code> key)</td>
+              <td>Yes</td>
+              <td>
+                <code>brand</code> → <code>src/brand-icons</code>, <code>ui</code> → <code>src/ui-icons</code>.
+                Use <code>prefix:name</code> in markup.
+              </td>
+            </tr>
+            <tr>
+              <td><code>iconDirs.local</code></td>
+              <td>No (documented)</td>
+              <td>
+                Sets the default <code>local</code> directory <strong>instead of</strong> <code>iconDir</code>.
+                Do not set both <code>iconDir</code> and <code>iconDirs.local</code>.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="h-config-snippet">
+      <header class="section__head">
+        <h2 id="h-config-snippet">Current <code>icon()</code> snippet</h2>
+        <p>Equivalent to the active block in <code>demo/astro.config.ts</code>:</p>
+      </header>
+      <pre class="config-snippet"><code>{`icon({
+  iconDir: ["src/icons", "src/extra-icons"],
+  iconDirs: {
+    brand: "src/brand-icons",
+    ui: "src/ui-icons",
+  },
+})`}</code></pre>
+    </section>
+
+    <footer class="footer">
+      <p>
+        <a href="/">← Feature matrix (home)</a> ·
+        <a href="/map/">Sprite stress</a>
+      </p>
+    </footer>
+  </main>
+</Base>
+
+<style>
+  .config-snippet {
+    margin: 0;
+    padding: 1rem 1.15rem;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.8rem;
+    line-height: 1.5;
+    overflow-x: auto;
+    color: var(--code);
+  }
+</style>
+
+<style is:global>
+  [data-icon="merge-badge"] {
+    color: #fbbf24;
+  }
+  [data-icon="brand:mark"] {
+    color: #94a3b8;
+  }
+  [data-icon="ui:glyph"] {
+    color: #6ee7b7;
+  }
+</style>

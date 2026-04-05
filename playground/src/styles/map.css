@@ -1,0 +1,55 @@
+/* Sprite stress page */
+
+.map {
+  padding: 2rem clamp(1rem, 4vw, 3rem);
+  max-width: 48rem;
+  margin: 0 auto;
+}
+
+.map__back {
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-size: 0.85rem;
+  margin: 0 0 1rem;
+}
+
+.map__back a {
+  color: #6ee7b7;
+}
+
+.map h1 {
+  font-family: "Source Serif 4", Georgia, serif;
+  font-size: 1.75rem;
+  margin: 0 0 0.75rem;
+  color: #e6edf3;
+}
+
+.map__lead {
+  color: #8b9cb0;
+  margin: 0 0 1.5rem;
+  max-width: 52ch;
+}
+
+.map__lead code {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.88em;
+  color: #c4b5fd;
+}
+
+.map__row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+  padding: 1.25rem;
+  border-radius: 10px;
+  border: 1px solid #2d3848;
+  background: #1a222d;
+}
+
+[data-icon="ic:outline-star"] {
+  color: goldenrod;
+}
+
+[data-icon="ic:outline-star"]:last-of-type {
+  color: #64748b;
+}

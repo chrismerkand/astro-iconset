@@ -1,0 +1,22 @@
+{
+  "name": "demo",
+  "type": "module",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@iconify-json/bi": "^1.2.7",
+    "@iconify-json/fe": "^1.2.4",
+    "@iconify-json/ic": "^1.2.4",
+    "@iconify-json/ri": "^1.2.10"
+  },
+  "devDependencies": {
+    "astro": "^6.0.8",
+    "astro-iconset": "workspace:*"
+  }
+}
