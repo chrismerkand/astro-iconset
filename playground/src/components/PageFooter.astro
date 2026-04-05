@@ -1,0 +1,112 @@
+---
+type Page = "index" | "react" | "vue" | "svelte" | "preact" | "solid" | "map" | "local-icons";
+
+interface Props {
+  current: Page;
+}
+
+const { current } = Astro.props;
+
+const pages: { id: Page; label: string; href: string; desc: string }[] = [
+  { id: "index",       label: "Feature matrix",  href: "/",             desc: "All icon features" },
+  { id: "react",       label: "React",           href: "/react/",       desc: "astro-iconset/react" },
+  { id: "vue",         label: "Vue",             href: "/vue/",         desc: "astro-iconset/vue" },
+  { id: "svelte",      label: "Svelte",          href: "/svelte/",      desc: "astro-iconset/svelte" },
+  { id: "preact",      label: "Preact",          href: "/preact/",      desc: "astro-iconset/preact" },
+  { id: "solid",       label: "Solid",           href: "/solid/",       desc: "astro-iconset/solid" },
+  { id: "map",         label: "Sprite stress",   href: "/map/",         desc: "Symbol deduplication" },
+  { id: "local-icons", label: "Local icon dirs", href: "/local-icons/", desc: "iconDir & iconDirs" },
+];
+---
+
+<footer class="page-footer">
+  <nav class="page-footer__nav" aria-label="Playground pages">
+    {pages.map((p) =>
+      p.id === current ? (
+        <span class="page-footer__item page-footer__item--current" aria-current="page">
+          <span class="page-footer__label">{p.label}</span>
+          <span class="page-footer__desc">{p.desc}</span>
+        </span>
+      ) : (
+        <a class="page-footer__item" href={p.href}>
+          <span class="page-footer__label">{p.label}</span>
+          <span class="page-footer__desc">{p.desc}</span>
+        </a>
+      )
+    )}
+  </nav>
+  <div class="page-footer__ext">
+    <a href="https://icones.js.org/" target="_blank" rel="noopener">Icones ↗</a>
+    <a href="https://iconify.design/" target="_blank" rel="noopener">Iconify ↗</a>
+  </div>
+</footer>
+
+<style>
+  .page-footer {
+    margin-top: 4rem;
+    padding: 1.5rem clamp(1rem, 4vw, 3rem);
+    border-top: 1px solid var(--border);
+  }
+
+  .page-footer__nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+  }
+
+  .page-footer__item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    padding: 0.6rem 1rem;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    text-decoration: none;
+    transition: border-color 0.15s, background 0.15s;
+    min-width: 9rem;
+  }
+
+  a.page-footer__item:hover {
+    border-color: var(--accent);
+    background: rgba(110, 231, 183, 0.05);
+  }
+
+  .page-footer__item--current {
+    border-color: var(--accent);
+    background: rgba(110, 231, 183, 0.08);
+    cursor: default;
+  }
+
+  .page-footer__label {
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-size: 0.82rem;
+    color: var(--text);
+  }
+
+  .page-footer__item--current .page-footer__label {
+    color: var(--accent);
+  }
+
+  .page-footer__desc {
+    font-size: 0.78rem;
+    color: var(--muted);
+  }
+
+  .page-footer__ext {
+    display: flex;
+    gap: 1.25rem;
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-size: 0.8rem;
+  }
+
+  .page-footer__ext a {
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.15s;
+  }
+
+  .page-footer__ext a:hover {
+    color: var(--text);
+  }
+</style>

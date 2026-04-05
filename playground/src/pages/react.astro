@@ -1,0 +1,155 @@
+---
+import Base from "../layouts/base.astro";
+import PageFooter from "../components/PageFooter.astro";
+import "../styles/feature-matrix.css";
+import {
+  RegistryLocalDemo,
+  RegistryIconifyDemo,
+  ImportIconDemo,
+  SizingDemo,
+  A11yDemo,
+  StylingDemo,
+  DuplicateDemo,
+  HydrationLoadDemo,
+  HydrationVisibleDemo,
+  HydrationOnlyDemo,
+  TailwindDemo,
+} from "../components/react/ReactDemos";
+---
+
+<Base
+  title="astro-iconset — React island"
+  description="React island test page for astro-iconset/react: registry, ?icon, sizing, a11y, CSS targeting, hydration modes."
+>
+  <a href="#main" class="skip">Skip to content</a>
+
+  <header class="hero">
+    <p class="hero__eyebrow">astro-iconset · demo</p>
+    <h1 id="page-title">React island</h1>
+    <p class="hero__lead">
+      Full feature test for <code>astro-iconset/react</code> — every icon renders as
+      inline <code>&lt;svg&gt;</code> (no <code>&lt;symbol&gt;</code> / <code>&lt;use&gt;</code> sprite).
+    </p>
+    <nav class="hero__nav" aria-label="Page sections">
+      <a href="#registry-local">Registry · local</a>
+      <a href="#registry-iconify">Registry · Iconify</a>
+      <a href="#import-icon">Import · ?icon</a>
+      <a href="#sizing">Sizing</a>
+      <a href="#a11y">Title &amp; desc</a>
+      <a href="#styling">CSS targeting</a>
+      <a href="#no-sprite">No sprite dedup</a>
+      <a href="#hydration">Hydration modes</a>
+      <a href="#tailwind">Tailwind</a>
+      <a href="/">← Feature matrix</a>
+    </nav>
+  </header>
+
+  <main id="main" class="main">
+
+    <!-- Registry · local --------------------------------------------------- -->
+    <section class="section" aria-labelledby="h-registry-local" id="registry-local">
+      <div class="section__head">
+        <h2 id="h-registry-local">Registry · local</h2>
+        <p>Local SVG icons from <code>iconDir</code> and named <code>iconDirs</code> sets.</p>
+      </div>
+      <RegistryLocalDemo client:load />
+    </section>
+
+    <!-- Registry · Iconify -------------------------------------------------- -->
+    <section class="section" aria-labelledby="h-registry-iconify" id="registry-iconify">
+      <div class="section__head">
+        <h2 id="h-registry-iconify">Registry · Iconify</h2>
+        <p>Icons from installed <code>@iconify-json/*</code> packages.</p>
+      </div>
+      <RegistryIconifyDemo client:load />
+    </section>
+
+    <!-- Import · ?icon ------------------------------------------------------- -->
+    <section class="section" aria-labelledby="h-import-icon" id="import-icon">
+      <div class="section__head">
+        <h2 id="h-import-icon">Import · <code>?icon</code></h2>
+        <p>SVG files imported directly via the <code>?icon</code> query — passed as the <code>icon</code> prop.</p>
+      </div>
+      <ImportIconDemo client:load />
+    </section>
+
+    <!-- Sizing -------------------------------------------------------------- -->
+    <section class="section" aria-labelledby="h-sizing" id="sizing">
+      <div class="section__head">
+        <h2 id="h-sizing">Sizing</h2>
+        <p><code>size</code> sets uniform width &amp; height; <code>width</code>/<code>height</code> allow non-square.</p>
+      </div>
+      <SizingDemo client:load />
+    </section>
+
+    <!-- Title & desc -------------------------------------------------------- -->
+    <section class="section" aria-labelledby="h-a11y" id="a11y">
+      <div class="section__head">
+        <h2 id="h-a11y">Title &amp; desc</h2>
+        <p>Accessibility props — <code>title</code> and <code>desc</code> are injected inside the <code>&lt;svg&gt;</code>.</p>
+      </div>
+      <A11yDemo client:load />
+    </section>
+
+    <!-- CSS targeting ------------------------------------------------------- -->
+    <section class="section" aria-labelledby="h-styling" id="styling">
+      <div class="section__head">
+        <h2 id="h-styling">CSS targeting via <code>data-icon</code></h2>
+        <p>The <code>data-icon</code> attribute is set on every <code>&lt;svg&gt;</code> — target it with CSS selectors.</p>
+      </div>
+      <StylingDemo client:load />
+    </section>
+
+    <!-- No sprite deduplication --------------------------------------------- -->
+    <section class="section" aria-labelledby="h-no-sprite" id="no-sprite">
+      <div class="section__head">
+        <h2 id="h-no-sprite">No sprite deduplication</h2>
+        <p>
+          Three identical icons — each is a full inline <code>&lt;svg&gt;</code>.
+          Unlike the Astro component, the React component never emits a <code>&lt;symbol&gt;</code>.
+        </p>
+      </div>
+      <DuplicateDemo client:load />
+    </section>
+
+    <!-- Hydration modes ----------------------------------------------------- -->
+    <section class="section" aria-labelledby="h-hydration" id="hydration">
+      <div class="section__head">
+        <h2 id="h-hydration">Hydration modes</h2>
+        <p>Same icon rendered with three different Astro island hydration directives.</p>
+      </div>
+      <div class="compare">
+        <HydrationLoadDemo client:load />
+        <HydrationVisibleDemo client:visible />
+        <HydrationOnlyDemo client:only="react" />
+      </div>
+    </section>
+
+    <!-- Tailwind ------------------------------------------------------------ -->
+    <section class="section" aria-labelledby="h-tailwind" id="tailwind">
+      <div class="section__head">
+        <h2 id="h-tailwind">Tailwind</h2>
+        <p>
+          Use <code>className</code> with Tailwind utilities. <code>text-*</code> sets <code>currentColor</code>
+          on monochrome icons; <code>size-*</code> / <code>w-*</code> / <code>h-*</code> override dimensions via CSS.
+        </p>
+      </div>
+      <TailwindDemo client:load />
+    </section>
+
+    <PageFooter current="react" />
+  </main>
+</Base>
+
+<style is:global>
+  /* data-icon colour overrides for the React test page */
+  [data-icon="bi:stars"] {
+    color: #fbbf24;
+  }
+  [data-icon="adjustment"] {
+    color: #a78bfa;
+  }
+  [data-icon="ic:baseline-star"] {
+    color: #f97316;
+  }
+</style>

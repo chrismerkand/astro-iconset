@@ -4,6 +4,7 @@
  * Home page (`index.astro`) stays the general feature matrix — edit this file only for integration tests.
  */
 import { Icon } from "astro-iconset/components";
+import PageFooter from "../components/PageFooter.astro";
 import Base from "../layouts/base.astro";
 import "../styles/feature-matrix.css";
 ---
@@ -19,7 +20,7 @@ import "../styles/feature-matrix.css";
     <h1 id="page-title">Local icon directories</h1>
     <p class="hero__lead">
       Live checks for <code>iconDir</code>, merged folders, and <code>iconDirs</code> prefixes. Configuration
-      is in <code>demo/astro.config.ts</code> (global to the whole demo app).
+      is in <code>playground/astro.config.mjs</code> (global to the whole playground).
     </p>
     <nav class="hero__nav" aria-label="Page sections">
       <a href="#registry-local">Examples</a>
@@ -132,12 +133,7 @@ import "../styles/feature-matrix.css";
 })`}</code></pre>
     </section>
 
-    <footer class="footer">
-      <p>
-        <a href="/">← Feature matrix (home)</a> ·
-        <a href="/map/">Sprite stress</a>
-      </p>
-    </footer>
+    <PageFooter current="local-icons" />
   </main>
 </Base>
 

@@ -1,0 +1,116 @@
+---
+import Base from "../layouts/base.astro";
+import PageFooter from "../components/PageFooter.astro";
+import "../styles/feature-matrix.css";
+import {
+  RegistryLocalDemo,
+  RegistryIconifyDemo,
+  ImportIconDemo,
+  SizingDemo,
+  A11yDemo,
+  StylingDemo,
+  DuplicateDemo,
+  TailwindDemo,
+} from "../components/solid/SolidDemos";
+---
+
+<Base
+  title="astro-iconset — Solid island"
+  description="Solid island test page for astro-iconset/solid: registry, ?icon, sizing, a11y, CSS targeting, Tailwind."
+>
+  <a href="#main" class="skip">Skip to content</a>
+
+  <header class="hero">
+    <p class="hero__eyebrow">astro-iconset · demo</p>
+    <h1 id="page-title">Solid island</h1>
+    <p class="hero__lead">
+      Full feature test for <code>astro-iconset/solid</code> — every icon renders as
+      inline <code>&lt;svg&gt;</code> via a SolidJS island.
+    </p>
+    <nav class="hero__nav" aria-label="Page sections">
+      <a href="#registry-local">Registry · local</a>
+      <a href="#registry-iconify">Registry · Iconify</a>
+      <a href="#import-icon">Import · ?icon</a>
+      <a href="#sizing">Sizing</a>
+      <a href="#a11y">Title &amp; desc</a>
+      <a href="#styling">CSS targeting</a>
+      <a href="#no-sprite">No sprite dedup</a>
+      <a href="#tailwind">Tailwind</a>
+    </nav>
+  </header>
+
+  <main id="main" class="main">
+
+    <section class="section" aria-labelledby="h-registry-local" id="registry-local">
+      <div class="section__head">
+        <h2 id="h-registry-local">Registry · local</h2>
+        <p>Local SVG icons from <code>iconDir</code> and named <code>iconDirs</code> sets.</p>
+      </div>
+      <RegistryLocalDemo client:load />
+    </section>
+
+    <section class="section" aria-labelledby="h-registry-iconify" id="registry-iconify">
+      <div class="section__head">
+        <h2 id="h-registry-iconify">Registry · Iconify</h2>
+        <p>Icons from installed <code>@iconify-json/*</code> packages.</p>
+      </div>
+      <RegistryIconifyDemo client:load />
+    </section>
+
+    <section class="section" aria-labelledby="h-import-icon" id="import-icon">
+      <div class="section__head">
+        <h2 id="h-import-icon">Import · <code>?icon</code></h2>
+        <p>SVG files imported via the <code>?icon</code> query — passed as the <code>icon</code> prop.</p>
+      </div>
+      <ImportIconDemo client:load />
+    </section>
+
+    <section class="section" aria-labelledby="h-sizing" id="sizing">
+      <div class="section__head">
+        <h2 id="h-sizing">Sizing</h2>
+        <p><code>size</code> sets uniform width &amp; height; <code>width</code>/<code>height</code> allow non-square.</p>
+      </div>
+      <SizingDemo client:load />
+    </section>
+
+    <section class="section" aria-labelledby="h-a11y" id="a11y">
+      <div class="section__head">
+        <h2 id="h-a11y">Title &amp; desc</h2>
+        <p>Accessibility props injected inside the <code>&lt;svg&gt;</code>.</p>
+      </div>
+      <A11yDemo client:load />
+    </section>
+
+    <section class="section" aria-labelledby="h-styling" id="styling">
+      <div class="section__head">
+        <h2 id="h-styling">CSS targeting via <code>data-icon</code></h2>
+        <p>The <code>data-icon</code> attribute is set on every rendered <code>&lt;svg&gt;</code>.</p>
+      </div>
+      <StylingDemo client:load />
+    </section>
+
+    <section class="section" aria-labelledby="h-no-sprite" id="no-sprite">
+      <div class="section__head">
+        <h2 id="h-no-sprite">No sprite deduplication</h2>
+        <p>Three identical icons — each is a full inline <code>&lt;svg&gt;</code>, no <code>&lt;symbol&gt;</code>.</p>
+      </div>
+      <DuplicateDemo client:load />
+    </section>
+
+    <section class="section" aria-labelledby="h-tailwind" id="tailwind">
+      <div class="section__head">
+        <h2 id="h-tailwind">Tailwind</h2>
+        <p><code>text-*</code> drives <code>currentColor</code>; <code>size-*</code> overrides dimensions via CSS.</p>
+      </div>
+      <TailwindDemo client:load />
+    </section>
+
+    <PageFooter current="solid" />
+  </main>
+</Base>
+
+<style is:global>
+  [data-icon="bi:stars"] { color: #fbbf24; }
+  [data-icon="adjustment"] { color: #a78bfa; }
+  [data-icon="ic:baseline-star"] { color: #f97316; }
+</style>

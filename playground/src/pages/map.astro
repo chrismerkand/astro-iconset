@@ -1,11 +1,11 @@
 ---
 import { Icon } from "astro-iconset/components";
 import Base from "../layouts/base.astro";
+import PageFooter from "../components/PageFooter.astro";
 ---
 
 <Base title="Sprite stress — astro-iconset" description="Repeated icons to verify sprite symbol reuse.">
   <main class="map">
-    <p class="map__back"><a href="/">← Feature matrix</a></p>
     <h1>Sprite stress</h1>
     <p class="map__lead">
       Five identical Iconify icons on one page — verify devtools: one <code>&lt;symbol&gt;</code>, multiple
@@ -16,6 +16,7 @@ import Base from "../layouts/base.astro";
         <Icon name="ic:outline-star" size={40} />
       ))}
     </div>
+    <PageFooter current="map" />
   </main>
 </Base>
 
@@ -24,14 +25,6 @@ import Base from "../layouts/base.astro";
     padding: 2rem clamp(1rem, 4vw, 3rem);
     max-width: 48rem;
     margin: 0 auto;
-  }
-  .map__back {
-    font-family: "IBM Plex Mono", ui-monospace, monospace;
-    font-size: 0.85rem;
-    margin: 0 0 1rem;
-  }
-  .map__back a {
-    color: #6ee7b7;
   }
   .map h1 {
     font-family: "Source Serif 4", Georgia, serif;

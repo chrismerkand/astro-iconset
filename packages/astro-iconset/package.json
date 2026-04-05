@@ -9,6 +9,26 @@
       "default": "./dist/index.js"
     },
     "./components": "./components/index.ts",
+    "./react": {
+      "types": "./components/react/index.ts",
+      "default": "./components/react/index.ts"
+    },
+    "./vue": {
+      "types": "./components/vue/index.ts",
+      "default": "./components/vue/index.ts"
+    },
+    "./svelte": {
+      "types": "./components/svelte/index.ts",
+      "default": "./components/svelte/index.ts"
+    },
+    "./preact": {
+      "types": "./components/preact/index.ts",
+      "default": "./components/preact/index.ts"
+    },
+    "./solid": {
+      "types": "./components/solid/index.ts",
+      "default": "./components/solid/index.ts"
+    },
     "./svg-icon": {
       "types": "./typings/svg-icon.d.ts"
     }
@@ -49,15 +69,31 @@
   },
   "homepage": "https://github.com/sudeep2003/astro-iconset#readme",
   "peerDependencies": {
-    "astro": ">=3.5.0"
+    "astro": ">=3.5.0",
+    "react": ">=18.0.0",
+    "react-dom": ">=18.0.0",
+    "vue": ">=3.0.0",
+    "svelte": ">=4.0.0",
+    "preact": ">=10.0.0",
+    "solid-js": ">=1.0.0"
+  },
+  "peerDependenciesMeta": {
+    "react": { "optional": true },
+    "react-dom": { "optional": true },
+    "vue": { "optional": true },
+    "svelte": { "optional": true },
+    "preact": { "optional": true },
+    "solid-js": { "optional": true }
   },
   "dependencies": {
     "@iconify/tools": "^5.0.6",
     "@iconify/types": "^2.0.0",
-    "@iconify/utils": "^3.1.0"
+    "@iconify/utils": "^3.1.0",
+    "@types/react-dom": "^18.3.7"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",
+    "@types/react": "^18.3.28",
     "astro": "^6.0.0",
     "typescript": "^5.0.4",
     "vite": "^7.0.0"
