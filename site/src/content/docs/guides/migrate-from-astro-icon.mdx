@@ -1,0 +1,152 @@
+---
+title: Migrate from astro-icon
+description: Step-by-step guide to switch from astro-icon to astro-iconset.
+---
+
+import { Steps, Tabs, TabItem, Aside } from '@astrojs/starlight/components';
+
+This guide walks through replacing **`astro-icon`** with **`astro-iconset`** in an existing Astro project. The two packages share a similar mental model — local SVGs, Iconify sets, an `Icon` component — so most of the changes are mechanical find-and-replace work.
+
+<Aside type="tip">
+  See the [Features](/features/) page for a full comparison of what astro-iconset adds over astro-icon.
+</Aside>
+
+<Steps>
+
+1. ### Install astro-iconset and remove astro-icon
+
+   <Tabs syncKey="package-manager">
+   <TabItem label="npm">
+
+   ```sh
+   npm install astro-iconset
+   npm uninstall astro-icon
+   ```
+
+   </TabItem>
+   <TabItem label="pnpm">
+
+   ```sh
+   pnpm add astro-iconset
+   pnpm remove astro-icon
+   ```
+
+   </TabItem>
+   <TabItem label="Yarn">
+
+   ```sh
+   yarn add astro-iconset
+   yarn remove astro-icon
+   ```
+
+   </TabItem>
+   </Tabs>
+
+2. ### Update `astro.config.mjs`
+
+   Replace the integration import and registration:
+
+   ```diff title="astro.config.mjs"
+   - import icon from "astro-icon";
+   + import icon from "astro-iconset";
+
+     export default defineConfig({
+       integrations: [icon()],
+     });
+   ```
+
+   If you had `astro-icon`-specific options (such as `include` for pack filtering), check the [configuration reference](/reference/configuration/) to confirm the equivalent option name in astro-iconset.
+
+3. ### Update component imports
+
+   The component path changes from `astro-icon/components` to `astro-iconset/components`:
+
+   ```diff
+   - import { Icon } from "astro-icon/components";
+   + import { Icon } from "astro-iconset/components";
+   ```
+
+   This applies to every `.astro` file that imports `Icon`. Most editors can do a project-wide find-and-replace on the string `astro-icon/components`.
+
+4. ### Check your `name` prop values
+
+   Both packages use the same **Iconify `set:icon-name` format** for Iconify icons and the same **file-relative slug** for local icons, so `name` values usually do not need to change.
+
+   | Icon type | Example value | Change needed? |
+   | --- | --- | --- |
+   | Local SVG (`src/icons/logo.svg`) | `name="logo"` | No |
+   | Local SVG in subfolder (`src/icons/logos/astro.svg`) | `name="logos/astro"` | No |
+   | Iconify icon | `name="mdi:account"` | No |
+
+5. ### Replace any `Sprite` or `SpriteProvider` usage
+
+   astro-icon exposed a separate `Sprite` or sprite-provider pattern in some versions. astro-iconset handles sprites automatically inside the `Icon` component — there is no separate wrapper to add or remove.
+
+   Remove any `SpriteProvider` wrappers from your layouts. The `Icon` component itself emits `<symbol>` / `<use>` pairs when the same icon is used more than once on a page.
+
+   If you ever want a fully inlined SVG without sprite behavior, add `is:inline`:
+
+   ```astro
+   <Icon name="logo" is:inline />
+   ```
+
+6. ### Switch framework-component icons (if applicable)
+
+   If you used `astro-icon` inside React, Vue, or other framework components via a workaround, astro-iconset ships first-class adapters:
+
+   ```diff title="src/components/Nav.tsx"
+   - import { Icon } from "astro-icon/components"; // ❌ does not work in .tsx
+   + import Icon from "astro-iconset/react";        // ✓ first-class React adapter
+   ```
+
+   Available adapters: `astro-iconset/react`, `/vue`, `/svelte`, `/preact`, `/solid`. See [Framework islands](/guides/frameworks/).
+
+7. ### Verify your local icon directory
+
+   Both packages default to **`src/icons/`**. If you moved it with `astro-icon`'s `iconDir` option, set the same path in astro-iconset:
+
+   ```js title="astro.config.mjs"
+   icon({ iconDir: "src/assets/icons" })
+   ```
+
+   astro-iconset also supports multiple directories and named prefixes via `iconDirs` — see the [configuration reference](/reference/configuration/#icondirs).
+
+8. ### Run a build and check for errors
+
+   ```sh
+   npm run build
+   ```
+
+   The build output will report any icon names it cannot resolve. Common causes:
+
+   - A local SVG file was renamed or moved.
+   - An `@iconify-json/*` package was removed or not yet installed.
+   - A `name` value still uses a format from an older astro-icon version.
+
+</Steps>
+
+---
+
+## What you gain
+
+After migrating you get everything from astro-iconset that astro-icon does not ship:
+
+- **`?icon` imports** — import a single `.svg` file as icon data anywhere in your project.
+- **Framework adapters** — `Icon` that works natively inside React, Vue, Svelte, Preact, and Solid files.
+- **Named prefix directories** (`iconDirs`) — organize icon sets under custom prefixes like `brand:logo`.
+- **SSR `include` filter** — ship only the icons your server actually references, not an entire Iconify set.
+
+See [Features](/features/) for the full list.
+
+---
+
+## Troubleshooting
+
+**Build error: cannot find icon `…`**
+The slug does not match a local file or installed Iconify set. Check that the `@iconify-json/*` package is installed and the icon name is spelled correctly.
+
+**TypeScript errors on `?icon` imports**
+Add `astro-iconset/svg-icon` to your `compilerOptions.types` or reference it in `src/env.d.ts`. See [SVG imports](/guides/icon-imports/).
+
+**Icons inside React / Vue / Svelte not rendering**
+You cannot import `astro-iconset/components` `Icon` inside framework files. Use the framework adapter (`astro-iconset/react`, etc.) or render `Icon` in an `.astro` wrapper and pass the result as a slot. See [Framework islands](/guides/frameworks/).

@@ -21,6 +21,15 @@ export default function createIntegration(
             ssr: {
               external,
             },
+            optimizeDeps: {
+              exclude: [
+                "astro-iconset/components/react",
+                "astro-iconset/components/preact",
+                "astro-iconset/components/solid",
+                "astro-iconset/components/svelte",
+                "astro-iconset/components/vue",
+              ],
+            },
           },
         });
       },

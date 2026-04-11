@@ -1,0 +1,209 @@
+---
+title: Features
+description: Everything Astro Iconset can do — local SVGs, Iconify, framework islands, sprites, SVGO, and more.
+---
+
+import { Card, CardGrid, Aside } from '@astrojs/starlight/components';
+
+Astro Iconset is a **build-time SVG icon integration** for Astro. Icons are resolved, optimized, and inlined at build time — there is no client-side icon runtime shipped to the browser.
+
+## Feature overview
+
+<CardGrid>
+  <Card title="Local SVG files" icon="document">
+    Drop `.svg` files in `src/icons/` and reference them by name. Subfolders work too — `src/icons/logos/astro.svg` is `logos/astro`.
+  </Card>
+  <Card title="Iconify icon sets" icon="puzzle">
+    Install any `@iconify-json/*` package and use `set:icon-name` in the `name` prop. Thousands of open-source sets available on [Iconify](https://iconify.design/).
+  </Card>
+  <Card title="Framework islands" icon="laptop">
+    Use `Icon` inside React, Vue, Svelte, Preact, or Solid components — import from `astro-iconset/react`, `/vue`, `/svelte`, `/preact`, or `/solid`.
+  </Card>
+  <Card title="SVG imports (?icon)" icon="add-document">
+    Import any `.svg` file as icon data with `?icon` and pass it to `icon={…}`. Useful for one-off SVGs outside a shared icon directory.
+  </Card>
+  <Card title="Sprites" icon="list-format">
+    Repeated uses of the same icon share a `<symbol>` / `<use>` sprite pair automatically, keeping HTML smaller on icon-heavy pages.
+  </Card>
+  <Card title="SVGO optimization" icon="approve-check">
+    Local SVG files are optimized with [SVGO](https://github.com/svg/svgo) at build time. Fine-tune behavior with `svgoOptions` in the integration config.
+  </Card>
+  <Card title="Multiple icon directories" icon="open-book">
+    Map prefixes to directories with `iconDirs`. Reference `brand:logo` from `src/brand-icons/logo.svg` — mix as many named sets as you need.
+  </Card>
+  <Card title="SSR bundle control" icon="setting">
+    For server or hybrid output, use `include` to ship only the specific Iconify icons your server routes actually use — not the entire set.
+  </Card>
+</CardGrid>
+
+---
+
+## Local SVG files
+
+Place `.svg` files anywhere under your configured icon directory (`src/icons/` by default). Files are picked up automatically — no manual registration.
+
+```astro
+---
+import { Icon } from "astro-iconset/components";
+---
+
+<Icon name="logo" />
+<Icon name="logos/astro" />
+```
+
+Configure a different directory, multiple directories, or named prefixes in the [integration options](/reference/configuration/).
+
+---
+
+## Iconify icon sets
+
+Install any `@iconify-json/*` package and reference icons with the Iconify `set:icon-name` format.
+
+```sh
+npm install @iconify-json/mdi
+```
+
+```astro
+<Icon name="mdi:account" size={24} title="Account" />
+```
+
+Browse available sets on [Iconify Icon Sets](https://icon-sets.iconify.design/) or [Icônes](https://icones.js.org/). Mix local icons and Iconify sets freely in the same project.
+
+---
+
+## Framework islands
+
+The `Icon` from `astro-iconset/components` is an Astro component — it only works in `.astro` files. For icons inside React, Vue, Svelte, Preact, or Solid components, import from the matching subpath:
+
+| Framework | Import |
+| --- | --- |
+| React | `import Icon from "astro-iconset/react"` |
+| Vue | `import { Icon } from "astro-iconset/vue"` |
+| Svelte | `import Icon from "astro-iconset/svelte"` |
+| Preact | `import Icon from "astro-iconset/preact"` |
+| Solid | `import Icon from "astro-iconset/solid"` |
+
+See [Framework islands](/guides/frameworks/) for usage examples and notes on multi-JSX-framework projects.
+
+---
+
+## SVG imports (`?icon`)
+
+Import a single `.svg` file as Iconify-compatible icon data using the `?icon` query. Useful when the file lives outside a shared icon directory.
+
+```astro
+---
+import { Icon } from "astro-iconset/components";
+import mark from "../assets/mark.svg?icon";
+---
+
+<Icon icon={mark} title="Mark" />
+```
+
+The same `icon` prop works in framework adapters too. See [SVG imports](/guides/icon-imports/).
+
+---
+
+## Sprites
+
+When the same icon is used more than once on a page, the first render emits a `<symbol>` in a hidden `<svg>`, and subsequent renders emit a `<use>` referencing it. This reduces HTML size on icon-heavy pages without any configuration.
+
+Set `is:inline` on an `Icon` to bypass the sprite and render a full inline `<svg>` instead.
+
+---
+
+## SVGO optimization
+
+All local `.svg` files pass through [SVGO](https://github.com/svg/svgo) at build time. The default configuration removes metadata, comments, and redundant attributes.
+
+Override or extend SVGO behavior with `svgoOptions`:
+
+```js title="astro.config.mjs"
+icon({
+  svgoOptions: {
+    multipass: true,
+    plugins: [{ name: "preset-default" }],
+  },
+})
+```
+
+See the [configuration reference](/reference/configuration/#svgooptions) for the full option shape.
+
+---
+
+## Multiple icon directories
+
+Use `iconDirs` to map named prefixes to separate directories:
+
+```js title="astro.config.mjs"
+icon({
+  iconDirs: {
+    brand: "src/brand-icons",
+    flags: "src/flag-icons",
+  },
+})
+```
+
+```astro
+<Icon name="brand:logo" />
+<Icon name="flags:us" />
+```
+
+See [Configuration](/reference/configuration/#icondirs) for details on `iconDir`, `iconDir` as an array, and `iconDirs`.
+
+---
+
+## CSS styling via `data-icon`
+
+Every icon rendered with `name` receives a `data-icon` attribute matching the icon name. Use it as a CSS hook without adding extra classes:
+
+```css
+[data-icon] {
+  width: 1em;
+  height: 1em;
+}
+
+[data-icon="mdi:account"] {
+  color: var(--color-brand);
+}
+```
+
+See [CSS & styling](/guides/styling/) for more patterns.
+
+---
+
+## SSR bundle control
+
+When `output` is `server` or `hybrid`, all icons from every installed Iconify set may be pulled into the server bundle by default. Use `include` to restrict this:
+
+```js title="astro.config.mjs"
+icon({
+  include: {
+    mdi: ["account", "account-plus", "home"],
+  },
+})
+```
+
+See [Deployment & SSR bundles](/guides/deployment/) and the [`include` reference](/reference/configuration/#include).
+
+---
+
+## Comparison with astro-icon
+
+Both packages integrate SVG icons into Astro. The table below shows the key differences:
+
+| Feature | astro-iconset | astro-icon |
+| --- | :---: | :---: |
+| Local SVG files | ✓ | ✓ |
+| Iconify sets (`@iconify-json/*`) | ✓ | ✓ |
+| Build-time optimization (SVGO) | ✓ | ✓ |
+| Sprites (`<symbol>` / `<use>`) | ✓ | ✓ |
+| `data-icon` CSS attribute | ✓ | ✓ |
+| `?icon` SVG import | ✓ | — |
+| Framework adapters (React / Vue / Svelte / Preact / Solid) | ✓ | — |
+| Named prefix directories (`iconDirs`) | ✓ | — |
+| SSR `include` filter | ✓ | — |
+
+<Aside type="note">
+  Coming from **astro-icon**? See the [migration guide](/guides/migrate-from-astro-icon/) for a step-by-step upgrade path.
+</Aside>

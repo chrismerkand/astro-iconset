@@ -24,6 +24,7 @@ export default defineConfig({
                 items: [
                     { label: 'Overview', link: '/' },
                     { label: 'Getting Started', link: '/getting-started/' },
+                    { label: 'Features', link: '/features/' },
                 ],
             },
             {
@@ -44,7 +45,8 @@ export default defineConfig({
             {
                 label: 'Project',
                 items: [
-                    { label: 'Migration notes', link: '/guides/migration/' },
+                    { label: 'Migrate from astro-icon', link: '/guides/migrate-from-astro-icon/' },
+                    { label: 'Version upgrade notes', link: '/guides/migration/' },
                     { label: 'Credits', link: '/acknowledgements/' },
                 ],
             },
