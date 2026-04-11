@@ -1,5 +1,11 @@
 # astro-iconset Changelog
 
+## 0.0.3
+
+### Patch
+
+- Fix: exclude framework sub-packages (`react`, `preact`, `solid`, `svelte`, `vue`) from Vite's `optimizeDeps` in the integration hook, preventing the "Could not resolve virtual:astro-iconset" error on dev server startup when framework `Icon` components are used.
+
 ## 0.0.2
 
 ### Initial release
