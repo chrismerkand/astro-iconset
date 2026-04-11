@@ -1,0 +1,109 @@
+---
+title: Getting Started
+description: Add Astro Iconset to your Astro project in a few steps.
+next:
+  link: /guides/customization/
+  label: Local & Iconify icons
+---
+
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+Astro Iconset adds an **`Icon`** component and an Astro integration for local SVGs and [Iconify](https://iconify.design/) sets. This guide assumes you already have an Astro project. If not, see the [Astro installation guide](https://docs.astro.build/en/install/auto/).
+
+## 1. Install the package
+
+`astro add` is not required. Pick your package manager:
+
+<Tabs syncKey="package-manager">
+<TabItem label="npm">
+
+```sh
+npm install astro-iconset
+```
+
+</TabItem>
+<TabItem label="pnpm">
+
+```sh
+pnpm add astro-iconset
+```
+
+</TabItem>
+<TabItem label="Yarn">
+
+```sh
+yarn add astro-iconset
+```
+
+</TabItem>
+</Tabs>
+
+## 2. Register the integration
+
+Add the integration to **`astro.config.mjs`**:
+
+```diff title="astro.config.mjs" lang="js" ins="icon()"
+import { defineConfig } from "astro/config";
++ import icon from "astro-iconset";
+
+export default defineConfig({
+  integrations: [icon()],
+});
+```
+
+## 3. Add icons
+
+Place **`.svg`** files under **`src/icons/`** (the default). You may use subfolders — for example `src/icons/logos/astro.svg` is referenced as `logos/astro`.
+
+## 4. Render an icon
+
+```astro
+---
+import { Icon } from "astro-iconset/components";
+---
+
+<Icon name="my-icon" />
+```
+
+If something does not work as expected, [open an issue](https://github.com/sudeep2003/astro-iconset/issues) with a minimal reproduction.
+
+## Next steps
+
+- **[Local & Iconify icons](/guides/customization/)** — Iconify sets, `include` for SSR, and more.
+- **[SVG imports (`?icon`)](/guides/icon-imports/)** — Import a single file with `?icon` and pass `icon={…}`.
+- **[Components](/guides/components/)** — Props, sprites, and `is:inline`.
+- **[Configuration](/reference/configuration/)** — `iconDir`, `iconDirs`, `svgoOptions`.
+
+## Updating Astro Iconset
+
+Third-party integrations are not handled by `@astrojs/upgrade`. Install the latest tag manually:
+
+<Tabs syncKey="package-manager">
+<TabItem label="npm">
+
+```sh
+npm install astro-iconset@latest
+```
+
+</TabItem>
+<TabItem label="pnpm">
+
+```sh
+pnpm add astro-iconset@latest
+```
+
+</TabItem>
+<TabItem label="Yarn">
+
+```sh
+yarn add astro-iconset@latest
+```
+
+</TabItem>
+</Tabs>
+
+See the [changelog](https://github.com/sudeep2003/astro-iconset/blob/main/packages/astro-iconset/CHANGELOG.md) for release notes.
+
+## Troubleshooting
+
+Use the [configuration reference](/reference/configuration/) and the guides in the sidebar. If the problem is Astro itself, the [Astro documentation](https://docs.astro.build) is the best place to start. For bugs and feature requests, use [GitHub issues](https://github.com/sudeep2003/astro-iconset/issues).

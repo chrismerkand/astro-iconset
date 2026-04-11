@@ -2,35 +2,50 @@
 import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
 
-// https://astro.build/config
+// https://starlight.astro.build/reference/configuration/
 export default defineConfig({
 	integrations: [
 		starlight({
 			title: 'Astro Iconset',
+			description:
+				'SVG icons for Astro — local files, Iconify, build-time optimization, and optional sprites.',
+			customCss: ['./src/styles/custom.css'],
 			social: [
-				{ icon: 'github', label: 'GitHub', href: 'https://github.com/sudeep2003/astro-iconset'}
+				{
+					icon: 'github',
+					label: 'GitHub',
+					href: 'https://github.com/sudeep2003/astro-iconset',
+				},
 			],
 			sidebar: [
 				{
-					label: 'Start Here',
+					label: 'Start',
 					items: [
+						{ label: 'Overview', link: '/' },
 						{ label: 'Getting Started', link: '/getting-started/' },
-						{ label: 'Upgrade to Astro Iconset v1', link: '/guides/upgrade/v1/' },
-						{ label: 'Acknowledgements', link: '/acknowledgements/' },
 					],
 				},
 				{
 					label: 'Guides',
 					items: [
-						{ label: 'Customizing Icons', link: '/guides/customization/' },
+						{ label: 'Local & Iconify icons', link: '/guides/customization/' },
+						{ label: 'SVG imports (?icon)', link: '/guides/icon-imports/' },
 						{ label: 'Components', link: '/guides/components/' },
-						{ label: 'CSS & Styling', link: '/guides/styling/' },
-						{ label: 'Deployment', link: '/guides/deployment/' },
+						{ label: 'Framework islands', link: '/guides/frameworks/' },
+						{ label: 'CSS & styling', link: '/guides/styling/' },
+						{ label: 'Deployment & SSR bundles', link: '/guides/deployment/' },
 					],
 				},
 				{
 					label: 'Reference',
 					autogenerate: { directory: 'reference' },
+				},
+				{
+					label: 'Project',
+					items: [
+						{ label: 'Migration notes', link: '/guides/migration/' },
+						{ label: 'Credits', link: '/acknowledgements/' },
+					],
 				},
 			],
 		}),

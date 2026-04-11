@@ -20,6 +20,9 @@
     "url": "https://github.com/sudeep2003/astro-iconset/issues"
   },
   "homepage": "https://github.com/sudeep2003/astro-iconset#readme",
+  "engines": {
+    "node": ">=22.0.0"
+  },
   "packageManager": "pnpm@8.11.0",
   "dependencies": {
     "@changesets/changelog-github": "^0.4.2",

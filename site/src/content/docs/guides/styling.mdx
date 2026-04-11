@@ -1,0 +1,155 @@
+---
+title: CSS & styling
+description: Color, size, data-icon, Tailwind, scoped CSS, and framework islands.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+## `data-icon` (Astro `Icon` and `name` in frameworks)
+
+When you use **`name`**, the root `<svg>` gets **`data-icon="<value>"`**:
+
+| Source | Example `name` | `data-icon` value |
+| --- | --- | --- |
+| Local file | `logo`, `logos/astro` | `logo`, `logos/astro` |
+| Iconify | `mdi:account` | `mdi:account` |
+
+When you use **`icon`** (`*.svg?icon`), **`data-icon` is not set** — use a **`class`**, **`id`**, or wrapper element for selectors.
+
+```astro title="src/pages/example.astro"
+---
+import { Icon } from "astro-iconset/components";
+---
+
+<Icon name="annotation" />
+<Icon name="mdi:account" />
+
+<style>
+  /* All icons on this page */
+  [data-icon] {
+    vertical-align: middle;
+  }
+  /* One local icon */
+  [data-icon="annotation"] {
+    color: crimson;
+  }
+  /* One Iconify icon */
+  [data-icon="mdi:account"] {
+    opacity: 0.85;
+  }
+</style>
+```
+
+## Color: `currentColor` and `fill`
+
+Many SVGs use **`fill="currentColor"`** (or inherit). In that case, CSS **`color`** (or Tailwind **`text-*`**) controls the icon color:
+
+```astro
+---
+import { Icon } from "astro-iconset/components";
+---
+
+<Icon name="logo" class="text-emerald-600" />
+```
+
+If an icon keeps a fixed fill in the source, you may need to adjust the SVG or SVGO options so it respects `currentColor` — see [Configuration](/reference/configuration/) for **`svgoOptions`**.
+
+## Size
+
+Use **`size`**, **`width`**, or **`height`** on the component. **`size`** sets both dimensions when you want a square icon.
+
+```astro
+---
+import { Icon } from "astro-iconset/components";
+---
+
+<Icon name="mdi:account" size={32} />
+<Icon name="mdi:account" width={24} height={32} />
+```
+
+## Scoped `<style>` in `.astro` files
+
+Styles in `<style>` are **scoped** by default. Selectors like `[data-icon]` still match the `Icon` output because Astro adds the scope to the **element**, not the attribute selector in a way that breaks attribute matching — but targeting **child** content inside the SVG can require **`:global(...)`** if you add deep rules.
+
+```astro
+<style>
+  /* Usually fine for the root svg */
+  [data-icon="logo"] {
+    color: var(--brand);
+  }
+  /* If you must pierce inner SVG parts */
+  :global([data-icon="logo"] path) {
+    stroke-width: 2;
+  }
+</style>
+```
+
+## Tailwind CSS
+
+Add Tailwind to your Astro project ([Tailwind + Astro](https://docs.astro.build/en/guides/styling/#tailwind)). The `Icon` component forwards **`class`** to the `<svg>`.
+
+```astro
+---
+import { Icon } from "astro-iconset/components";
+---
+
+<Icon name="logo" class="size-8 text-emerald-600 shrink-0" aria-hidden="true" />
+```
+
+Common utilities:
+
+- **Size:** `size-6`, `w-8 h-8`, `h-5 w-auto`
+- **Color:** `text-slate-900`, `text-primary` (if you define `primary` in your theme)
+- **Layout:** `inline-block`, `shrink-0`, `align-middle`
+
+## Global stylesheets
+
+Rules in **global** CSS files (for example `src/styles/global.css` imported from a layout) apply everywhere. Use them for design tokens, `[data-icon]` defaults, or dark mode:
+
+```css title="src/styles/global.css"
+[data-icon] {
+  color: var(--color-fg);
+}
+
+@media (prefers-color-scheme: dark) {
+  [data-icon="logo"] {
+    color: var(--color-fg-dark);
+  }
+}
+```
+
+## Framework islands (React, Vue, Svelte, Preact, Solid)
+
+- **`name`:** `data-icon` is set — you can use **`[data-icon="…"]`** in CSS.
+- **`icon`:** `data-icon` is omitted — prefer **`class` / `className`** (React) or **`class`** (Vue, Svelte, Solid).
+
+```tsx
+<Icon name="mdi:home" className="size-6 text-blue-600" />
+```
+
+```vue
+<Icon name="mdi:home" class="size-6 text-blue-600" />
+```
+
+Preact uses **`className`** like React. Solid often uses **`class`**.
+
+## Accessibility
+
+- Use **`title`** (and **`desc`** when needed) for meaningful icons, or expose the name on a parent control.
+- For **decorative** icons next to visible text, add **`aria-hidden="true"`** on the `Icon` so screen readers skip redundancy.
+
+```astro
+---
+import { Icon } from "astro-iconset/components";
+---
+
+<button type="button">
+  <Icon name="mdi:menu" class="size-5" aria-hidden="true" />
+  Menu
+</button>
+```
+
+## Related
+
+- [Components](/guides/components/) — `is:inline`, sprites (Astro only)
+- [Framework islands](/guides/frameworks/) — setup and props for `astro-iconset/react` and other entry points

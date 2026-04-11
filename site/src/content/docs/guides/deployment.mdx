@@ -1,0 +1,32 @@
+---
+title: Deployment & SSR bundles
+description: Optimize Astro Iconset for static and server-rendered deployments.
+---
+
+Astro Iconset works with any [Astro deployment target](https://docs.astro.build/en/guides/deploy/). This page covers bundle size when using **server** or **hybrid** output.
+
+## Rendering modes
+
+Astro supports [several rendering modes](https://docs.astro.build/en/basics/rendering-mode/). Astro Iconset behaves as follows:
+
+- **Static (pre-rendered) pages:** No special Iconify bundle tuning is required for most cases.
+- **On-demand (server) routes:** Iconify data from installed `@iconify-json/*` packages can be pulled into **server JavaScript** unless you limit what is included.
+
+## Use `include` for server bundles
+
+Configure **`include`** on the integration so only the Iconify icons you need are bundled for SSR. See the [`include` section](/reference/configuration/#include) in the configuration reference.
+
+```js
+icon({
+  include: {
+    mdi: ["account", "home"],
+  },
+});
+```
+
+This is especially important when many `@iconify-json/*` packages are installed.
+
+## Related guides
+
+- [Local & Iconify icons](/guides/customization/) — installing sets and referencing `set:icon`
+- [Configuration](/reference/configuration/) — full list of integration options

@@ -1,5 +1,6 @@
 {
   "name": "astro-iconset",
+  "description": "SVG icon integration for Astro — local icons, Iconify sets, sprite deduplication, and zero browser runtime.",
   "version": "0.0.1",
   "type": "module",
   "types": "./dist/index.d.ts",
@@ -49,6 +50,7 @@
   },
   "keywords": [
     "astro",
+    "withastro",
     "astro-integration",
     "astro-component",
     "image",
@@ -61,7 +63,7 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/sudeep2003/astro-iconset.git",
-    "directory": "packages/core"
+    "directory": "packages/astro-iconset"
   },
   "license": "MIT",
   "bugs": {
@@ -88,12 +90,13 @@
   "dependencies": {
     "@iconify/tools": "^5.0.6",
     "@iconify/types": "^2.0.0",
-    "@iconify/utils": "^3.1.0",
-    "@types/react-dom": "^18.3.7"
+    "@iconify/utils": "^3.1.0"
   },
   "devDependencies": {
+    "@iconify-json/ri": "*",
     "@types/node": "^22.0.0",
     "@types/react": "^18.3.28",
+    "@types/react-dom": "^18.3.7",
     "astro": "^6.0.0",
     "typescript": "^5.0.4",
     "vite": "^7.0.0"

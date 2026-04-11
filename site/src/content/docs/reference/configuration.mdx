@@ -1,0 +1,126 @@
+---
+title: Configuration Reference
+description: Configuration options for the Astro Iconset integration.
+---
+
+## Configure the `icon` integration
+
+Astro Iconset is an integration built on top the [Astro](https://astro.build) web framework. You can configure your project inside the `astro.config.mjs` configuration file:
+
+```diff lang="js" title="astro.config.mjs" 
+import { defineConfig } from 'astro/config';
++ import icon from 'astro-iconset';
+
+export default defineConfig({
+	integrations: [
++		icon({ /* options */ })
+	]
+});
+```
+
+You can pass the following options to the `icon` integration.
+
+### `include`
+
+**type:** `Record<string, string[]>`
+
+Filter the specific icons to include from `@iconify-json/*` sets in the final server bundle.
+
+```js {7-12}
+import { defineConfig } from 'astro/config';
+import icon from 'astro-iconset';
+
+export default defineConfig({
+	integrations: [
+		icon({
+			include: {
+				// Include only these `mdi` icons in the bundle
+				mdi: ['account', 'account-plus', 'account-minus'],
+				// Or include an entire set (can be large):
+				// mdi: ['*'],
+			}
+		})
+	]
+});
+```
+
+:::caution
+By default, all icons from every installed set are included!
+
+When deploying an Astro site for server rendering, it is **highly** recommended to include _only_ the icons that are needed.
+:::
+
+### `iconDir`
+
+To use a local icon directory other than the default `src/icons/`, set the `iconDir` option.
+
+```js {7}
+import { defineConfig } from "astro/config";
+import icon from "astro-iconset";
+
+export default defineConfig({
+  integrations: [
+    icon({
+      iconDir: "src/assets/icons",
+    })
+  ]
+});
+```
+
+### `iconDir` (array)
+
+Merge multiple directories into the default **`local`** set. Duplicate icon keys across those folders cause a build error.
+
+```js
+icon({
+  iconDir: ["src/icons", "src/assets/icons"],
+})
+```
+
+### `iconDirs`
+
+Map each prefix to a directory. Icons are referenced as `prefix:name` (for example `brand:logo`). Use `iconDirs.local` for the default local directory instead of `iconDir`, but do not set both `iconDir` and `iconDirs.local`.
+
+```js
+icon({
+  iconDirs: {
+    brand: "src/brand-icons",
+  },
+})
+```
+
+### `svgoOptions`
+
+Control the behavior of local `.svg` optimization by customizing the [`svgo`](https://github.com/svg/svgo) options.
+
+Refer to the official [`svgo` configuration options](https://github.com/svg/svgo#configuration) for more information.
+
+```js {7-24}
+import { defineConfig } from "astro/config";
+import icon from "astro-iconset";
+
+export default defineConfig({
+  integrations: [
+    icon({
+      svgoOptions: {
+        multipass: true,
+        plugins: [
+          {
+            name: "preset-default",
+            params: {
+              overrides: {
+                // customize default plugin options
+                inlineStyles: {
+                  onlyMatchedOnce: false,
+                },
+                // or disable plugins
+                removeDoctype: false,
+              }
+            }
+          }
+        ]
+      }
+    })
+  ]
+});
+```

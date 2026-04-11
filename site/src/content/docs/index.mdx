@@ -1,0 +1,41 @@
+---
+title: Astro Iconset
+description: SVG icons for Astro — local files, Iconify sets, and build-time optimization.
+template: splash
+editUrl: false
+lastUpdated: false
+hero:
+  tagline: Local SVGs, Iconify, and optional sprites — optimized at build time, zero icon runtime in the browser.
+  actions:
+    - text: Get started
+      link: /getting-started/
+      icon: right-arrow
+      variant: primary
+    - text: Configuration
+      link: /reference/configuration/
+      icon: document
+      variant: minimal
+    - text: GitHub
+      link: https://github.com/sudeep2003/astro-iconset
+      icon: external
+      variant: minimal
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+
+## What you get
+
+<CardGrid stagger>
+	<Card title="Local SVGs" icon="document">
+		Drop files in `src/icons/` (or configure other folders) and reference them by name. SVGO runs automatically.
+	</Card>
+	<Card title="Iconify" icon="puzzle">
+		Install `@iconify-json/*` packages and use `set:icon-name` in the `name` prop — thousands of sets from [Iconify](https://iconify.design/).
+	</Card>
+	<Card title="Imports" icon="add-document">
+		Use `*.svg?icon` when an SVG should not live in a shared icon directory — pass the result to `icon={…}`.
+	</Card>
+	<Card title="Frameworks" icon="laptop">
+		Use `astro-iconset/react`, `/vue`, `/svelte`, `/preact`, or `/solid` inside islands when you need icons in UI components.
+	</Card>
+</CardGrid>

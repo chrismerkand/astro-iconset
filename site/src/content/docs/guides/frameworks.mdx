@@ -1,0 +1,183 @@
+---
+title: Framework islands
+description: Use Icon inside React, Vue, Svelte, Preact, or Solid with Astro’s island architecture.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+The **`astro-iconset/components`** `Icon` is an Astro component: it only works in `.astro` files. For icons **inside** UI framework components (`.tsx`, `.vue`, `.svelte`, etc.), import from the matching package subpath below.
+
+## Prerequisites
+
+1. **`astro-iconset`** is registered in **`astro.config.mjs`** (same as for Astro `Icon`).
+
+   ```js title="astro.config.mjs"
+   import { defineConfig } from "astro/config";
+   import icon from "astro-iconset";
+
+   export default defineConfig({
+     integrations: [icon()],
+   });
+   ```
+
+2. Install the **Astro integration** for each framework you use (`@astrojs/react`, `@astrojs/vue`, `@astrojs/svelte`, `@astrojs/preact`, `@astrojs/solid-js`) and the matching **peer** runtime packages.
+
+3. **Peer dependencies** for `astro-iconset` framework entry points:
+
+   | Import from | Peers |
+   | --- | --- |
+   | `astro-iconset/react` | `react`, `react-dom` |
+   | `astro-iconset/vue` | `vue` |
+   | `astro-iconset/svelte` | `svelte` |
+   | `astro-iconset/preact` | `preact` |
+   | `astro-iconset/solid` | `solid-js` |
+
+## How framework `Icon` differs from Astro `Icon`
+
+- Icons render as **inline `<svg>`** in the island. Framework wrappers **do not** use the same **sprite `<symbol>` / `<use>`** optimization as the Astro `Icon` on the server; each usage is self-contained (see the [Components](/guides/components/) guide for the Astro sprite behavior).
+- Pass **`name`** (registry) or **`icon`** (`*.svg?icon` import), never both.
+- With **`name`**, the root `<svg>` gets **`data-icon="<name>"`** for CSS. With **`icon`**, `data-icon` is omitted — style with **`class`** / **`className`** or a wrapper element instead (see [CSS & styling](/guides/styling/)).
+
+## Props (all frameworks)
+
+| Prop | Description |
+| --- | --- |
+| `name` | Local slug or Iconify id (`mdi:account`) when not using `icon` |
+| `icon` | Object from `import x from "*.svg?icon"` |
+| `size` | Sets both width and height when provided |
+| `width` / `height` | Explicit dimensions (override `size` when both set) |
+| `title` | Accessible name (`<title>` inside the SVG) |
+| `desc` | Long description (`<desc>`) when needed |
+
+Additional attributes (`class`, `className`, `aria-*`, `id`, etc.) are forwarded to the root `<svg>` where the framework allows.
+
+### Multiple JSX frameworks in one project
+
+If you use **more than one** of React, Preact, and Solid, narrow each integration with **`include`** so their JSX compilers do not fight over the same files:
+
+```js title="astro.config.mjs"
+import react from "@astrojs/react";
+import preact from "@astrojs/preact";
+import solid from "@astrojs/solid-js";
+
+export default defineConfig({
+  integrations: [
+    react({ include: ["**/react/**", "**/*.react.tsx"] }),
+    preact({ include: ["**/preact/**", "**/*.preact.tsx"] }),
+    solid({ include: ["**/solid/**", "**/*.solid.tsx"] }),
+    icon(),
+  ],
+});
+```
+
+Vue and Svelte use distinct file extensions, so separate **`include`** guards are usually unnecessary.
+
+## React
+
+Install **`@astrojs/react`**, **`react`**, and **`react-dom`**. Use the default export or **`Icon`** named export from **`astro-iconset/react`**.
+
+```tsx title="src/components/Nav.tsx"
+import Icon from "astro-iconset/react";
+
+export function Nav() {
+  return (
+    <nav aria-label="Account">
+      <Icon name="mdi:account" size={24} title="Account" className="text-slate-800" />
+    </nav>
+  );
+}
+```
+
+Use the component from an `.astro` page with a [client directive](https://docs.astro.build/en/reference/directives-reference/#client-directives):
+
+```astro title="src/pages/index.astro"
+---
+import Base from "../layouts/Layout.astro";
+import { Nav } from "../components/Nav.tsx";
+---
+
+<Base>
+  <Nav client:load />
+</Base>
+```
+
+## Vue
+
+Install **`@astrojs/vue`** and **`vue`**.
+
+```vue title="src/components/NavBar.vue"
+<script setup lang="ts">
+import { Icon } from "astro-iconset/vue";
+</script>
+
+<template>
+  <Icon name="mdi:account" :size="24" title="Account" class="text-slate-800" />
+</template>
+```
+
+```astro
+---
+import NavBar from "../components/NavBar.vue";
+---
+
+<NavBar client:load />
+```
+
+## Svelte
+
+Install **`@astrojs/svelte`** and **`svelte`**.
+
+```svelte title="src/components/Nav.svelte"
+<script lang="ts">
+  import Icon from "astro-iconset/svelte";
+</script>
+
+<Icon name="mdi:account" size={24} title="Account" class="text-slate-800" />
+```
+
+## Preact
+
+Install **`@astrojs/preact`** and **`preact`**. Same API as React; import from **`astro-iconset/preact`**.
+
+```tsx title="src/components/preact/IconButton.preact.tsx"
+import Icon from "astro-iconset/preact";
+
+export function IconButton() {
+  return <Icon name="mdi:account" size={20} className="text-slate-800" />;
+}
+```
+
+## Solid
+
+Install **`@astrojs/solid-js`** and **`solid-js`**.
+
+```tsx title="src/components/solid/Nav.tsx"
+import Icon from "astro-iconset/solid";
+
+export function Nav() {
+  return <Icon name="mdi:account" size={24} class="text-slate-800" />;
+}
+```
+
+## `*.svg?icon` inside a framework file
+
+You can import icon data in the same module and pass **`icon`**:
+
+```tsx title="src/components/Logo.tsx"
+import Icon from "astro-iconset/react";
+import logo from "../assets/logo.svg?icon";
+
+export function Logo() {
+  return <Icon icon={logo} title="Logo" width={120} height={32} />;
+}
+```
+
+Ensure your TypeScript setup includes the **`astro-iconset/svg-icon`** types (see [SVG imports](/guides/icon-imports/)).
+
+## Passing Astro-rendered icons instead
+
+Sometimes you do not need a framework `Icon` at all: render **`astro-iconset/components`** `Icon` in an `.astro` file and pass the result into a framework component using [slots or children](https://docs.astro.build/en/guides/framework-components/#passing-children-to-framework-components).
+
+<Aside type="tip">
+  Styling for `class` / `color` / `data-icon` is covered in [CSS & styling](/guides/styling/).
+</Aside>

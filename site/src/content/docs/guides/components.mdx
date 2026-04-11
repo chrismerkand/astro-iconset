@@ -1,0 +1,100 @@
+---
+title: Components
+description: The Icon component — props, sprites, and inlining.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+Astro Iconset’s main API is **`Icon`**, which renders optimized SVG markup in your HTML.
+
+## `Icon` (Astro)
+
+Import from **`astro-iconset/components`** and use it like any [Astro component](https://docs.astro.build/en/core-concepts/astro-components/):
+
+```astro
+---
+import { Icon } from "astro-iconset/components";
+---
+
+<Icon name="logo" />
+```
+
+Rendering happens on the **server**; there is no client-side icon runtime.
+
+### Props
+
+You can pass **`name`** or **`icon`**, plus standard SVG attributes (including ARIA).
+
+| Prop | Type | Description |
+| --- | --- | --- |
+| `name` | `string` | Local slug (for example `logo` or `logos/astro`) or Iconify id (`mdi:account`) |
+| `icon` | `AstroIconImport` | Data from `import x from "*.svg?icon"` — mutually exclusive with `name` |
+| `title` | `string` | Adds a `<title>` for accessibility |
+| `desc` | `string` | Adds a `<desc>` when needed |
+| `size` | `number \| string` | Shorthand for `width` and `height` |
+| `width` / `height` | `number \| string` | Explicit dimensions |
+| `is:inline` | `boolean` | When `true`, inlines the SVG without the sprite `<symbol>` path |
+
+```ts
+interface Props extends HTMLAttributes<"svg"> {
+  name?: string;
+  icon?: AstroIconImport;
+  "is:inline"?: boolean;
+  title?: string;
+  desc?: string;
+  size?: number | string;
+  width?: number | string;
+  height?: number | string;
+}
+```
+
+Use **`name`** or **`icon`**, not both.
+
+### Sprites and `is:inline`
+
+By default, the first use of an icon on a page can emit a **`<symbol>`** and later uses reference it with **`<use>`**, which keeps HTML smaller when the same icon repeats.
+
+Set **`is:inline`** when you want full inline SVG without that sprite behavior (for example for a one-off or special cases).
+
+<Aside type="tip">
+  For framework-specific `Icon` wrappers (React, Vue, Svelte, Preact, Solid), see [Framework islands](/guides/frameworks/).
+</Aside>
+
+### Example: `name` and Iconify
+
+```astro
+---
+import { Icon } from "astro-iconset/components";
+---
+
+<Icon name="mdi:account" size={32} title="Account" />
+```
+
+### Example: `icon` import
+
+```astro
+---
+import { Icon } from "astro-iconset/components";
+import mark from "../assets/mark.svg?icon";
+---
+
+<Icon icon={mark} title="Mark" />
+```
+
+## Passing icons into framework components
+
+You cannot import Astro’s `Icon` directly inside React/Vue/Svelte files. Either:
+
+- Use the [**framework entry**](/guides/frameworks/) (`astro-iconset/react`, etc.), or
+- Render `Icon` in an `.astro` wrapper and pass the result via [slots or children](https://docs.astro.build/en/guides/framework-components/#passing-children-to-framework-components).
+
+```astro
+---
+import ReactComponent from "./ReactComponent.jsx";
+import { Icon } from "astro-iconset/components";
+---
+
+<ReactComponent>
+  <Icon name="logo" />
+</ReactComponent>
+```

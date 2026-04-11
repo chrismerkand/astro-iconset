@@ -1,0 +1,73 @@
+---
+title: Local & Iconify icons
+description: Use local SVG files and Iconify icon sets with Astro Iconset.
+---
+
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+## Local icons
+
+Add `.svg` files under **`src/icons/`** by default (or set [`iconDir` / `iconDirs`](/reference/configuration/)). Reference them by path relative to that folder, without the extension:
+
+```astro
+---
+import { Icon } from "astro-iconset/components";
+---
+
+<Icon name="logo" />
+<Icon name="logos/astro" />
+```
+
+Files are optimized with [SVGO](https://github.com/svg/svgo). Integration options are in the [configuration reference](/reference/configuration/).
+
+## Iconify icon sets
+
+[Iconify](https://iconify.design/) bundles many open-source sets as **`@iconify-json/*`** npm packages. After you install a package, icons are available to the `Icon` component by **`set:icon-name`**.
+
+### Find icons
+
+Browse sets on [Iconify Icon Sets](https://icon-sets.iconify.design/) or [Icônes](https://icones.js.org/).
+
+### Install a set
+
+Example: [Material Design Icons](https://icones.js.org/collection/mdi) (`mdi`).
+
+<Tabs syncKey="package-manager">
+<TabItem label="npm">
+
+```sh
+npm install @iconify-json/mdi
+```
+
+</TabItem>
+<TabItem label="pnpm">
+
+```sh
+pnpm add @iconify-json/mdi
+```
+
+</TabItem>
+<TabItem label="Yarn">
+
+```sh
+yarn add @iconify-json/mdi
+```
+
+</TabItem>
+</Tabs>
+
+### Use an icon
+
+```astro
+---
+import { Icon } from "astro-iconset/components";
+---
+
+<Icon name="mdi:account" />
+```
+
+You can mix local icons and multiple Iconify sets in the same project.
+
+:::danger[Server and hybrid output]
+If you use **`output: 'server'`** or **`output: 'hybrid'`**, every icon that *could* be referenced may be pulled into the server bundle by default. Configure **`include`** so only the icons you need are bundled — see [Deployment](/guides/deployment/) and [`include`](/reference/configuration/#include).
+:::

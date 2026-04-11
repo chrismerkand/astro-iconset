@@ -1,0 +1,32 @@
+---
+title: SVG imports (?icon)
+description: Import individual SVG files as icon data for the Icon component.
+---
+
+You can import a single `.svg` file as Iconify-compatible data using the **`?icon`** query. That is useful when a file should **not** live in a shared icon directory, or you want to treat one asset as icon data explicitly.
+
+## Usage
+
+Use **either** `name` (registry) **or** `icon` (imported data) — not both.
+
+```astro
+---
+import { Icon } from "astro-iconset/components";
+import logo from "../assets/logo.svg?icon";
+---
+
+<Icon icon={logo} title="Site logo" />
+```
+
+## TypeScript
+
+The package ships type definitions for `*.svg?icon` imports. Add the virtual types to your TypeScript setup (for example include `"astro-iconset/svg-icon"` in `compilerOptions.types`, or reference the types in a `src/env.d.ts` file). See the [package README](https://github.com/sudeep2003/astro-iconset/blob/main/packages/astro-iconset/README.md) for the exact pattern your project uses.
+
+## When to use `?icon` vs `name`
+
+| Approach | Best for |
+| --- | --- |
+| **`name="slug"`** | Icons under your configured `iconDir` / `iconDirs` (shared registry) |
+| **`icon={imported}`** | One-off files, assets in arbitrary folders, or comparing pipeline output to registry icons |
+
+For more on the `Icon` component, see [Components](/guides/components/).

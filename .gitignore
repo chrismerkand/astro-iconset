@@ -137,18 +137,16 @@ dist
 
 
 .vscode
-.github
-.changeset
-docs/
-demo/README.md
-demo/sandbox.config.json
+docs/plan-*
+sandbox.config.json
 
 packages/core/*.md
 
 PLAN.md
 REFERENCES.md
-README.md
-LICENSE
+FRAMEWORKS.md
+GAPS.md
+TESTING.md
+ISSUES.md
 
-packages/service/
-demo2/
+tests/

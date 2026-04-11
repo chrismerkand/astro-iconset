@@ -1,0 +1,77 @@
+---
+title: Migration notes
+description: How the current Astro Iconset integration works and what to adjust when upgrading.
+---
+
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+The integration is **registered in `astro.config.mjs`**, ships an `Icon` component from **`astro-iconset/components`**, and loads Iconify data from **`@iconify-json/*`** packages you install. When you upgrade, follow the [changelog](https://github.com/sudeep2003/astro-iconset/blob/main/packages/astro-iconset/CHANGELOG.md) and the notes below.
+
+## Stay up to date
+
+<Tabs syncKey="package-manager">
+<TabItem label="npm">
+
+```sh
+npm install astro-iconset@latest
+```
+
+</TabItem>
+<TabItem label="pnpm">
+
+```sh
+pnpm add astro-iconset@latest
+```
+
+</TabItem>
+<TabItem label="Yarn">
+
+```sh
+yarn add astro-iconset@latest
+```
+
+</TabItem>
+</Tabs>
+
+## Integration-based setup
+
+Register the integration in your Astro config:
+
+```js title="astro.config.mjs"
+import { defineConfig } from "astro/config";
+import icon from "astro-iconset";
+
+export default defineConfig({
+  integrations: [icon()],
+});
+```
+
+Import the component from the **`/components`** subpath:
+
+```astro
+---
+import { Icon } from "astro-iconset/components";
+---
+```
+
+## Iconify sets
+
+Install the JSON packages for each set you use (for example `@iconify-json/mdi`). Reference icons with `set:icon` in the `name` prop.
+
+There is **no remote icon API** in the build — icons come from your local files and installed packages.
+
+## Styling hook
+
+Icons expose a valid **`data-icon`** attribute for CSS. Use `[data-icon]` and `[data-icon="…"]` selectors in your styles.
+
+## Sprites
+
+Repeated uses of the same icon on a page can share an optimized sprite. You do **not** need a separate “sprite provider” wrapper — the `Icon` component handles this when rendering.
+
+## SVGO
+
+Local SVG optimization is configured on the integration with **`svgoOptions`**, not per-icon props in markup. See the [configuration reference](/reference/configuration/).
+
+## Server bundles
+
+For **`server`** or **`hybrid`** output, use the **`include`** option so only the Iconify icons you need are bundled into server code. See [Deployment](/guides/deployment/) and [Configuration](/reference/configuration/).
