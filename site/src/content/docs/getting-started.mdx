@@ -12,7 +12,33 @@ Astro Iconset adds an **`Icon`** component and an Astro integration for local SV
 
 ## 1. Install the package
 
-`astro add` is not required. Pick your package manager:
+Run `astro add` to install the package and register the integration automatically:
+
+<Tabs syncKey="package-manager">
+<TabItem label="npm">
+
+```sh
+npx astro add astro-iconset
+```
+
+</TabItem>
+<TabItem label="pnpm">
+
+```sh
+pnpm astro add astro-iconset
+```
+
+</TabItem>
+<TabItem label="Yarn">
+
+```sh
+yarn astro add astro-iconset
+```
+
+</TabItem>
+</Tabs>
+
+Or install manually with your package manager and follow step 2:
 
 <Tabs syncKey="package-manager">
 <TabItem label="npm">
@@ -40,7 +66,7 @@ yarn add astro-iconset
 
 ## 2. Register the integration
 
-Add the integration to **`astro.config.mjs`**:
+Skip this step if you used `astro add`. Add the integration to **`astro.config.mjs`**:
 
 ```diff title="astro.config.mjs" lang="js" ins="icon()"
 import { defineConfig } from "astro/config";

@@ -5,6 +5,7 @@ import sitemap from '@astrojs/sitemap';
 
 // https://starlight.astro.build/reference/configuration/
 export default defineConfig({
+    site: 'https://astro-iconset.wingflows.com',
     integrations: [starlight({
         title: 'Astro Iconset',
         description:
