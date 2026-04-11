@@ -1,5 +1,9 @@
 # Astro Iconset
 
+[![npm version](https://img.shields.io/npm/v/astro-iconset?color=blue)](https://www.npmjs.com/package/astro-iconset)
+[![npm downloads](https://img.shields.io/npm/dm/astro-iconset)](https://www.npmjs.com/package/astro-iconset)
+[![license](https://img.shields.io/npm/l/astro-iconset)](./LICENSE)
+
 [Astro](https://astro.build) integration for SVG icons: local files, [Iconify](https://iconify.design) collections. Icons are optimized at build time, repeated uses can share a sprite, and the package ships no extra runtime to the browser.
 
 **Install in an Astro project**

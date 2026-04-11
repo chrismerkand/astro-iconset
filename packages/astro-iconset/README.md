@@ -1,5 +1,9 @@
 # Astro Iconset
 
+[![npm version](https://img.shields.io/npm/v/astro-iconset?color=blue)](https://www.npmjs.com/package/astro-iconset)
+[![npm downloads](https://img.shields.io/npm/dm/astro-iconset)](https://www.npmjs.com/package/astro-iconset)
+[![license](https://img.shields.io/npm/l/astro-iconset)](./LICENSE)
+
 An [Astro integration](https://docs.astro.build/en/guides/integrations-guide/) that adds an `Icon` component for inlining SVGs at build time. Local files and [Iconify](https://iconify.design) sets are optimized with [SVGO](https://github.com/svg/svgo), repeated icons on a page share a sprite when not inlined, and nothing extra ships to the browser as a runtime.
 
 **Features**
@@ -8,6 +12,19 @@ An [Astro integration](https://docs.astro.build/en/guides/integrations-guide/) t
 - Iconify collections via `@iconify-json/*` packages
 - Optional `*.svg?icon` imports for one-off files without a shared directory
 - Wrapper components for React, Vue, Svelte, Preact, and Solid (install only what you use)
+
+## Why astro-iconset?
+
+| Feature | astro-iconset | astro-icon and others |
+| --- | --- | --- |
+| Local icons from `src/icons/` | ✅ | ✅ |
+| Iconify collections | ✅ | ✅ |
+| SVG sprite deduplication | ✅ | ❌ |
+| Per-directory named prefixes | ✅ | ❌ |
+| `?icon` import for one-off SVGs | ✅ | ❌ |
+| React / Vue / Svelte / Preact / Solid | ✅ | ❌ |
+| Zero browser runtime | ✅ | ❌ |
+| SVGO optimization | ✅ | ✅ |
 
 - [Installation](#installation)
 - [Usage](#usage)

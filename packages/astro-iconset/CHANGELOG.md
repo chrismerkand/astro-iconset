@@ -1,6 +1,6 @@
 # astro-iconset Changelog
 
-## 0.0.1
+## 0.0.2
 
 ### Initial release
 
@@ -15,3 +15,7 @@
 - `title` and `desc` props for accessible labelled icons
 - `size`, `width`, and `height` props for responsive scaling
 - `is:inline` escape-hatch to bypass sprite deduplication per-instance
+
+## 0.0.1
+
+Placeholder release

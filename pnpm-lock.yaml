@@ -143,6 +143,9 @@ importers:
 
   site:
     dependencies:
+      '@astrojs/sitemap':
+        specifier: ^3.7.2
+        version: 3.7.2
       '@astrojs/starlight':
         specifier: ^0.38.2
         version: 0.38.2(astro@6.0.8)
@@ -155,9 +158,6 @@ importers:
       astro:
         specifier: ^6.0.1
         version: 6.0.8(typescript@5.9.3)
-      sharp:
-        specifier: ^0.34.2
-        version: 0.34.5
 
 packages:
 
@@ -1815,6 +1815,7 @@ packages:
     resolution: {integrity: sha512-Td76q7j57o/tLVdgS746cYARfSyxk8iEfRxewL9h4OMzYhbW4TAcppl0mT4eyqXddh6L/jwoM75mo7ixa/pCeQ==}
     engines: {node: '>=18'}
     requiresBuild: true
+    optional: true
 
   /@img/sharp-darwin-arm64@0.34.5:
     resolution: {integrity: sha512-imtQ3WMJXbMY4fxb/Ndp6HBTNVtWCUI0WdobyheGf5+ad6xX8VIDO8u2xE4qc/fr08CKG/7dDseFtn6M6g/r3w==}
@@ -6150,6 +6151,7 @@ packages:
       '@img/sharp-win32-arm64': 0.34.5
       '@img/sharp-win32-ia32': 0.34.5
       '@img/sharp-win32-x64': 0.34.5
+    optional: true
 
   /shebang-command@1.2.0:
     resolution: {integrity: sha512-EV3L1+UQWGor21OmnvojK36mhg+TyIKDh3iFBKBohr5xeXIhNBcx8oWdgkTEEQ+BEFFYdLRuqMfd5L84N1V5Vg==}
