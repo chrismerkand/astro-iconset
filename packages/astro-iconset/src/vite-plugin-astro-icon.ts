@@ -223,10 +223,9 @@ export function createPlugin(
         try {
           await loadFilesystemCollections();
         } catch (ex) {
-          ctx.logger.error(
-            `[astro-iconset] Failed to load icon collections: ${ex instanceof Error ? ex.message : String(ex)}`,
-          );
-          collections = undefined;
+          const message = ex instanceof Error ? ex.message : String(ex);
+          ctx.logger.error(`[astro-iconset] Failed to load icon collections: ${message}`);
+          throw new Error(`[astro-iconset] Build aborted: could not load icon collections. ${message}`);
         }
         return `export default ${JSON.stringify(collections ?? {})};\nexport const config = ${JSON.stringify({ include, localIconSets })}`;
       }
@@ -336,7 +335,7 @@ function collectionsHash(collections: IconCollection[]): string {
 async function tryGetHash(path: URL): Promise<string | void> {
   try {
     const text = await readFile(path, { encoding: "utf-8" });
-    return text.split("\n", 3)[1].replace("// ", "");
+    return text.split("\n", 3)[1]?.replace("// ", "");
   } catch {}
 }
 

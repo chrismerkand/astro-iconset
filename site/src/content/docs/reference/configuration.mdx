@@ -3,11 +3,13 @@ title: Configuration Reference
 description: Configuration options for the Astro Iconset integration.
 ---
 
+import { Aside } from "@astrojs/starlight/components";
+
 ## Configure the `icon` integration
 
-Astro Iconset is an integration built on top the [Astro](https://astro.build) web framework. You can configure your project inside the `astro.config.mjs` configuration file:
+Pass options to `icon({ … })` in **`astro.config.mjs`**:
 
-```diff lang="js" title="astro.config.mjs" 
+```diff lang="js" title="astro.config.mjs"
 import { defineConfig } from 'astro/config';
 + import icon from 'astro-iconset';
 
@@ -18,41 +20,52 @@ export default defineConfig({
 });
 ```
 
-You can pass the following options to the `icon` integration.
+All options are optional. Defaults are noted per option below.
+
+---
 
 ### `include`
 
-**type:** `Record<string, string[]>`
+**Type:** `Record<string, string[]>`  
+**Default:** `{}` (all installed `@iconify-json/*` icons are included)
 
-Filter the specific icons to include from `@iconify-json/*` sets in the final server bundle.
+Filter which Iconify icons to include in the final server bundle. Only relevant for `output: 'server'` or `output: 'hybrid'` — static builds resolve everything at build time.
 
 ```js {7-12}
-import { defineConfig } from 'astro/config';
-import icon from 'astro-iconset';
+import { defineConfig } from "astro/config";
+import icon from "astro-iconset";
 
 export default defineConfig({
-	integrations: [
-		icon({
-			include: {
-				// Include only these `mdi` icons in the bundle
-				mdi: ['account', 'account-plus', 'account-minus'],
-				// Or include an entire set (can be large):
-				// mdi: ['*'],
-			}
-		})
-	]
+  integrations: [
+    icon({
+      include: {
+        // Include only these `mdi` icons in the bundle
+        mdi: ["account", "account-plus", "account-minus"],
+        // Or include an entire set (can be large):
+        // mdi: ['*'],
+      },
+    }),
+  ],
 });
 ```
 
-:::caution
-By default, all icons from every installed set are included!
+<Aside type="caution">
+  Without `include`, **all icons from every installed `@iconify-json/*`
+  package** are included in the server bundle. For large sets this can add
+  megabytes to your deployed function. See [Deployment & SSR
+  bundles](/guides/deployment/) for guidance.
+</Aside>
 
-When deploying an Astro site for server rendering, it is **highly** recommended to include _only_ the icons that are needed.
-:::
+---
 
 ### `iconDir`
 
-To use a local icon directory other than the default `src/icons/`, set the `iconDir` option.
+**Type:** `string | string[]`  
+**Default:** `"src/icons"`
+
+The directory (or directories) from which local SVG files are loaded. Files are referenced by their path relative to this directory, without the `.svg` extension.
+
+**Single directory:**
 
 ```js {7}
 import { defineConfig } from "astro/config";
@@ -62,38 +75,72 @@ export default defineConfig({
   integrations: [
     icon({
       iconDir: "src/assets/icons",
-    })
-  ]
+    }),
+  ],
 });
 ```
 
-### `iconDir` (array)
-
-Merge multiple directories into the default **`local`** set. Duplicate icon keys across those folders cause a build error.
+**Multiple directories** (merged into the same `local` set — duplicate file names across folders cause a build error):
 
 ```js
 icon({
   iconDir: ["src/icons", "src/assets/icons"],
-})
+});
 ```
+
+<Aside type="note">
+  Do not set both `iconDir` and `iconDirs.local` at the same time. Use one or
+  the other.
+</Aside>
+
+---
 
 ### `iconDirs`
 
-Map each prefix to a directory. Icons are referenced as `prefix:name` (for example `brand:logo`). Use `iconDirs.local` for the default local directory instead of `iconDir`, but do not set both `iconDir` and `iconDirs.local`.
+**Type:** `Record<string, string>`  
+**Default:** `{}` (no named directories)
+
+Map prefix names to directories. Each icon in a named directory is referenced as `prefix:name` instead of just `name`. Useful for avoiding name collisions when mixing icon sets from multiple folders.
 
 ```js
 icon({
   iconDirs: {
     brand: "src/brand-icons",
+    ui: "src/ui-icons",
   },
-})
+});
 ```
+
+Reference icons with their prefix:
+
+```astro
+<Icon name="brand:logo" />
+<Icon name="ui:menu" />
+```
+
+To replace the default `local` (unprefixed) directory with a named one, set `iconDirs.local`:
+
+```js
+icon({
+  iconDirs: {
+    local: "src/my-icons", // replaces the default src/icons
+    brand: "src/brand-icons",
+  },
+});
+```
+
+<Aside type="note">
+  Do not set both `iconDir` and `iconDirs.local` — they control the same thing.
+</Aside>
+
+---
 
 ### `svgoOptions`
 
-Control the behavior of local `.svg` optimization by customizing the [`svgo`](https://github.com/svg/svgo) options.
+**Type:** [`Config`](https://github.com/svg/svgo/blob/main/lib/svgo.d.ts) (SVGO config object)  
+**Default:** SVGO runs with `preset-default` — removes metadata, comments, and redundant attributes
 
-Refer to the official [`svgo` configuration options](https://github.com/svg/svgo#configuration) for more information.
+Override the SVGO configuration used to optimize local `.svg` files at build time. See the [SVGO configuration docs](https://github.com/svg/svgo#configuration) for all available plugins and options.
 
 ```js {7-24}
 import { defineConfig } from "astro/config";
@@ -109,18 +156,31 @@ export default defineConfig({
             name: "preset-default",
             params: {
               overrides: {
-                // customize default plugin options
+                // Customize a default plugin option
                 inlineStyles: {
                   onlyMatchedOnce: false,
                 },
-                // or disable plugins
+                // Or disable a default plugin
                 removeDoctype: false,
-              }
-            }
-          }
-        ]
-      }
-    })
-  ]
+              },
+            },
+          },
+          // Convert hard-coded fill/stroke to currentColor so CSS color works
+          {
+            name: "convertColors",
+            params: { currentColor: true },
+          },
+        ],
+      },
+    }),
+  ],
 });
 ```
+
+<Aside type="tip">
+  If icons appear invisible or ignore CSS `color`, the source SVG may use a
+  hard-coded fill. Add the `convertColors` plugin (shown above) to replace it
+  with `currentColor`. See
+  [Troubleshooting](/guides/troubleshooting/#icon-color-does-not-change-with-color-or-tailwind-text)
+  for more.
+</Aside>

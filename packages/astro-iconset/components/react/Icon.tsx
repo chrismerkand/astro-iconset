@@ -26,6 +26,16 @@ function escapeHtml(s: string): string {
 
 export default function Icon(props: IconProps) {
   const { name, icon, size, width, height, title, desc, ...rest } = props;
+
+  if (icon != null && name != null) {
+    throw new Error('[astro-iconset] Use either "name" or "icon", not both.');
+  }
+  if (import.meta.env.DEV) {
+    if (size != null && (width != null || height != null)) {
+      console.warn('[astro-iconset] Use either "size" or "width"/"height", not both. "width"/"height" takes priority.');
+    }
+  }
+
   const resolvedWidth = width ?? size;
   const resolvedHeight = height ?? size;
 
@@ -81,7 +91,7 @@ export default function Icon(props: IconProps) {
     <svg
       {...(svgAttrs as SVGProps<SVGSVGElement>)}
       {...rest}
-      data-icon={icon ? undefined : (name as string)}
+      data-icon={icon ? "astro-iconset:import" : (name as string)}
       dangerouslySetInnerHTML={{
         __html:
           (title ? `<title>${escapeHtml(title)}</title>` : "") +

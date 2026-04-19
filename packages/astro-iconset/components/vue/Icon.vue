@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, watchEffect } from "vue";
 import { getIconData, iconToSVG, replaceIDs } from "@iconify/utils";
 import type { AstroIconCollectionMap } from "../../typings/integration";
 import type { AstroIconImport } from "../../typings/astro-icon-import";
@@ -23,7 +23,19 @@ function escapeHtml(s: string) {
   return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 }
 
+if (import.meta.env.DEV) {
+  watchEffect(() => {
+    if (props.size != null && (props.width != null || props.height != null)) {
+      console.warn('[astro-iconset] Use either "size" or "width"/"height", not both. "width"/"height" takes priority.');
+    }
+  });
+}
+
 const rendered = computed(() => {
+  if (props.icon != null && props.name != null) {
+    throw new Error('[astro-iconset] Use either "name" or "icon", not both.');
+  }
+
   const resolvedWidth = props.width ?? props.size;
   const resolvedHeight = props.height ?? props.size;
 
@@ -68,7 +80,7 @@ const rendered = computed(() => {
 <template>
   <svg
     v-bind="rendered.attrs"
-    :data-icon="props.icon ? undefined : (props.name as string)"
+    :data-icon="props.icon ? 'astro-iconset:import' : (props.name as string)"
     v-html="rendered.inner"
   />
 </template>

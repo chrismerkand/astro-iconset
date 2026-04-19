@@ -1,5 +1,5 @@
 ---
-type Page = "index" | "react" | "vue" | "svelte" | "preact" | "solid" | "map" | "local-icons";
+type Page = "index" | "react" | "vue" | "svelte" | "preact" | "solid" | "map" | "local-icons" | "iconify-subset";
 
 interface Props {
   current: Page;
@@ -16,6 +16,7 @@ const pages: { id: Page; label: string; href: string; desc: string }[] = [
   { id: "solid",       label: "Solid",           href: "/solid/",       desc: "astro-iconset/solid" },
   { id: "map",         label: "Sprite stress",   href: "/map/",         desc: "Symbol deduplication" },
   { id: "local-icons", label: "Local icon dirs", href: "/local-icons/", desc: "iconDir & iconDirs" },
+  { id: "iconify-subset", label: "Iconify subset", href: "/iconify-subset/", desc: "include · mdi:home & mdi:download" },
 ];
 ---
 

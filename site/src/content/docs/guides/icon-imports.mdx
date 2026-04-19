@@ -20,13 +20,34 @@ import logo from "../assets/logo.svg?icon";
 
 ## TypeScript
 
-The package ships type definitions for `*.svg?icon` imports. Add the virtual types to your TypeScript setup (for example include `"astro-iconset/svg-icon"` in `compilerOptions.types`, or reference the types in a `src/env.d.ts` file). See the [package README](https://github.com/sudeep2003/astro-iconset/blob/main/packages/astro-iconset/README.md) for the exact pattern your project uses.
+The package ships type definitions for `*.svg?icon` imports. Add them using **one** of these two approaches:
+
+**Option A — `src/env.d.ts` (recommended for Astro projects):**
+
+```ts title="src/env.d.ts"
+/// <reference types="astro/client" />
+/// <reference types="astro-iconset/svg-icon" />
+```
+
+**Option B — `tsconfig.json` `types` array:**
+
+```json title="tsconfig.json"
+{
+  "compilerOptions": {
+    "types": ["astro-iconset/svg-icon"]
+  }
+}
+```
+
+After adding the reference, restart your TypeScript server. Without this, imports like `import logo from "../assets/logo.svg?icon"` will show a "Cannot find module" error even though they work at build time.
+
+If you still see the error after adding the reference, see [Troubleshooting](/guides/troubleshooting/#typescript-error-on-svgicon-import).
 
 ## When to use `?icon` vs `name`
 
-| Approach | Best for |
-| --- | --- |
-| **`name="slug"`** | Icons under your configured `iconDir` / `iconDirs` (shared registry) |
+| Approach              | Best for                                                                                   |
+| --------------------- | ------------------------------------------------------------------------------------------ |
+| **`name="slug"`**     | Icons under your configured `iconDir` / `iconDirs` (shared registry)                       |
 | **`icon={imported}`** | One-off files, assets in arbitrary folders, or comparing pipeline output to registry icons |
 
 For more on the `Icon` component, see [Components](/guides/components/).

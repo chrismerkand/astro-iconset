@@ -30,6 +30,15 @@ const Icon: Component<IconProps> = (rawProps) => {
     "name", "icon", "size", "width", "height", "title", "desc",
   ]);
 
+  if (local.icon != null && local.name != null) {
+    throw new Error('[astro-iconset] Use either "name" or "icon", not both.');
+  }
+  if (import.meta.env.DEV) {
+    if (local.size != null && (local.width != null || local.height != null)) {
+      console.warn('[astro-iconset] Use either "size" or "width"/"height", not both. "width"/"height" takes priority.');
+    }
+  }
+
   const resolvedWidth = () => local.width ?? local.size;
   const resolvedHeight = () => local.height ?? local.size;
 
@@ -73,12 +82,13 @@ const Icon: Component<IconProps> = (rawProps) => {
     return { attrs, inner };
   };
 
+  const result = computed();
   return (
     <svg
-      {...(computed().attrs as JSX.SvgSVGAttributes<SVGSVGElement>)}
+      {...(result.attrs as JSX.SvgSVGAttributes<SVGSVGElement>)}
       {...rest}
-      data-icon={local.icon ? undefined : (local.name as string)}
-      innerHTML={computed().inner}
+      data-icon={local.icon ? "astro-iconset:import" : (local.name as string)}
+      innerHTML={result.inner}
     />
   );
 };

@@ -7,7 +7,8 @@ import solid from "@astrojs/solid-js";
 import icon from "astro-iconset";
 import tailwindcss from "@tailwindcss/vite";
 
-// Local icon directory demos live on `/local-icons/` — see that page and `playground/src/pages/local-icons.astro`.
+// Local icon directory demos: `/local-icons/` (`local-icons.astro`).
+// Iconify `include` subset (MDI home + download): `/iconify-subset/` (`iconify-subset.astro`).
 // https://astro.build/config
 export default defineConfig({
   integrations: [
@@ -23,6 +24,10 @@ export default defineConfig({
       iconDirs: {
         brand: "src/brand-icons",
         ui: "src/ui-icons",
+      },
+      // Subset a large pack: only these MDI glyphs are registered (see `/iconify-subset/`).
+      include: {
+        mdi: ["home", "download"],
       },
     }),
   ],

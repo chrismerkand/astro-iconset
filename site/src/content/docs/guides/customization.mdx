@@ -3,11 +3,33 @@ title: Local & Iconify icons
 description: Use local SVG files and Iconify icon sets with Astro Iconset.
 ---
 
-import { Tabs, TabItem } from '@astrojs/starlight/components';
+import { Tabs, TabItem, Aside, FileTree } from "@astrojs/starlight/components";
 
 ## Local icons
 
-Add `.svg` files under **`src/icons/`** by default (or set [`iconDir` / `iconDirs`](/reference/configuration/)). Reference them by path relative to that folder, without the extension:
+### File layout
+
+Place `.svg` files under **`src/icons/`** by default (or set [`iconDir` / `iconDirs`](/reference/configuration/)). The `name` prop is the file path relative to that directory, **without** the `.svg` extension.
+
+{/* prettier-ignore */}
+<FileTree>
+- src/
+  - icons/
+    - logo.svg
+    - close.svg
+    - logos/
+      - astro.svg
+      - github.svg
+</FileTree>
+
+The `name` prop maps directly to the relative path without `.svg`:
+
+| File | `name` value |
+| --- | --- |
+| `src/icons/logo.svg` | `"logo"` |
+| `src/icons/close.svg` | `"close"` |
+| `src/icons/logos/astro.svg` | `"logos/astro"` |
+| `src/icons/logos/github.svg` | `"logos/github"` |
 
 ```astro
 ---
@@ -18,7 +40,92 @@ import { Icon } from "astro-iconset/components";
 <Icon name="logos/astro" />
 ```
 
-Files are optimized with [SVGO](https://github.com/svg/svgo). Integration options are in the [configuration reference](/reference/configuration/).
+### Naming rules
+
+- Use any characters that are valid in a file path: letters, numbers, hyphens (`-`), underscores (`_`), and forward slashes for subfolders.
+- The name is **case-sensitive** on case-sensitive file systems (Linux, most CI). `Logo` and `logo` are different icons.
+- The `.svg` extension is **never** part of the name.
+- Spaces in file names work but are awkward in `name` — prefer hyphens.
+
+### Multiple directories (merged set)
+
+Pass an array to `iconDir` to merge several folders into one **flat** namespace. Icons from every folder use the same naming rules — the path is relative to each root, and keys must be unique across the merged set.
+
+{/* prettier-ignore */}
+<FileTree>
+- src/
+  - icons/
+    - logo.svg
+    - close.svg
+  - extra-icons/
+    - star.svg
+    - badge.svg
+</FileTree>
+
+| File | `name` (merged `local` set) |
+| --- | --- |
+| `src/icons/logo.svg` | `"logo"` |
+| `src/icons/close.svg` | `"close"` |
+| `src/extra-icons/star.svg` | `"star"` |
+| `src/extra-icons/badge.svg` | `"badge"` |
+
+```js title="astro.config.mjs"
+icon({
+  iconDir: ["src/icons", "src/extra-icons"],
+});
+```
+
+**Duplicate keys fail the build** — for example both `src/icons/logo.svg` and `src/extra-icons/logo.svg` resolve to `name="logo"`. Rename one file or switch to [`iconDirs`](#named-directories-icondirs) with prefixes.
+
+### Named directories (`iconDirs`)
+
+Map a **prefix** to each directory. Files are referenced as `prefix:name` (still without `.svg`). Different prefixes can reuse the same file name — `brand:logo` and `ui:logo` are not a collision.
+
+{/* prettier-ignore */}
+<FileTree>
+- src/
+  - brand-icons/
+    - logo.svg
+    - wordmark.svg
+  - ui-icons/
+    - logo.svg
+    - menu.svg
+    - close.svg
+</FileTree>
+
+Same file name in two folders is fine — the prefix keeps them distinct (`brand:logo` vs `ui:logo`).
+
+| File | `name` |
+| --- | --- |
+| `src/brand-icons/logo.svg` | `"brand:logo"` |
+| `src/brand-icons/wordmark.svg` | `"brand:wordmark"` |
+| `src/ui-icons/logo.svg` | `"ui:logo"` |
+| `src/ui-icons/menu.svg` | `"ui:menu"` |
+| `src/ui-icons/close.svg` | `"ui:close"` |
+
+```js title="astro.config.mjs"
+icon({
+  iconDirs: {
+    brand: "src/brand-icons",
+    ui: "src/ui-icons",
+  },
+});
+```
+
+```astro
+<Icon name="brand:logo" />
+<Icon name="ui:logo" />
+<Icon name="ui:menu" />
+```
+
+<Aside type="note">
+  Do not set both `iconDir` and `iconDirs.local` at the same time — they control
+  the same default unprefixed set.
+</Aside>
+
+Files are optimized with [SVGO](https://github.com/svg/svgo) at build time. See [`svgoOptions`](/reference/configuration/#svgooptions) to customize the behaviour.
+
+---
 
 ## Iconify icon sets
 
@@ -26,7 +133,7 @@ Files are optimized with [SVGO](https://github.com/svg/svgo). Integration option
 
 ### Find icons
 
-Browse sets on [Iconify Icon Sets](https://icon-sets.iconify.design/) or [Icônes](https://icones.js.org/).
+Browse sets on [Iconify Icon Sets](https://icon-sets.iconify.design/) or [Icônes](https://icones.js.org/). The identifier shown on those sites is the `set:icon-name` value to use in `name`.
 
 ### Install a set
 
@@ -64,10 +171,15 @@ import { Icon } from "astro-iconset/components";
 ---
 
 <Icon name="mdi:account" />
+<Icon name="mdi:home" size={24} />
 ```
 
 You can mix local icons and multiple Iconify sets in the same project.
 
-:::danger[Server and hybrid output]
-If you use **`output: 'server'`** or **`output: 'hybrid'`**, every icon that *could* be referenced may be pulled into the server bundle by default. Configure **`include`** so only the icons you need are bundled — see [Deployment](/guides/deployment/) and [`include`](/reference/configuration/#include).
-:::
+<Aside type="danger" title="Server and hybrid output">
+  If you use **`output: 'server'`** or **`output: 'hybrid'`**, every icon from
+  every installed `@iconify-json/*` package may be pulled into the server bundle
+  by default. Configure **`include`** so only the icons you need are bundled —
+  see [Deployment](/guides/deployment/) and
+  [`include`](/reference/configuration/#include).
+</Aside>

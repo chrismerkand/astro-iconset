@@ -1,0 +1,107 @@
+---
+/**
+ * Demo: `include` limits an installed `@iconify-json/*` pack to specific icon names.
+ * Uses @iconify-json/mdi with only `home` and `download` — reference as `mdi:…` (Iconify id).
+ */
+import { Icon } from "astro-iconset/components";
+import PageFooter from "../components/PageFooter.astro";
+import Base from "../layouts/base.astro";
+import "../styles/feature-matrix.css";
+---
+
+<Base
+  title="astro-iconset — Iconify subset (MDI)"
+  description="include option: only selected icons from @iconify-json/mdi, e.g. mdi:home and mdi:download."
+>
+  <a href="#main" class="skip">Skip to content</a>
+
+  <header class="hero">
+    <p class="hero__eyebrow">astro-iconset · demo</p>
+    <h1 id="page-title">Iconify subset — Material Design Icons</h1>
+    <p class="hero__lead">
+      This playground installs <code>@iconify-json/mdi</code> but registers <strong>only</strong> the icons
+      listed under <code>include.mdi</code> in <code>playground/astro.config.mjs</code>. In markup, Iconify
+      ids use <code>prefix:name</code> (for example <code>mdi:home</code>), not bracket syntax.
+    </p>
+    <nav class="hero__nav" aria-label="Page sections">
+      <a href="#examples">Examples</a>
+      <a href="#config-snippet"><code>astro.config</code></a>
+      <a href="/">← Feature matrix (home)</a>
+    </nav>
+  </header>
+
+  <main id="main" class="main" aria-labelledby="page-title">
+    <section id="examples" class="section" aria-labelledby="h-examples">
+      <header class="section__head">
+        <h2 id="h-examples">Examples</h2>
+        <p>
+          Only <code>home</code> and <code>download</code> from the MDI pack are available as
+          <code>mdi:home</code> and <code>mdi:download</code>. Any other <code>mdi:…</code> name fails at build
+          time because it was not included.
+        </p>
+      </header>
+      <ul class="matrix">
+        <li class="matrix__row">
+          <span class="matrix__label"><code>mdi:home</code></span>
+          <span class="matrix__sample"><Icon name="mdi:home" size={32} /></span>
+          <code class="matrix__code">name="mdi:home"</code>
+        </li>
+        <li class="matrix__row">
+          <span class="matrix__label"><code>mdi:download</code></span>
+          <span class="matrix__sample"><Icon name="mdi:download" size={32} /></span>
+          <code class="matrix__code">name="mdi:download"</code>
+        </li>
+      </ul>
+    </section>
+
+    <section class="section section--muted" aria-labelledby="h-note">
+      <header class="section__head">
+        <h2 id="h-note">Name format</h2>
+        <p>
+          If you are used to a <code>mdi[home]</code>-style shorthand elsewhere, the Iconify / astro-iconset
+          form is <code>mdi:home</code> (set prefix, colon, icon slug). Browse slugs on
+          <a href="https://icon-sets.iconify.design/mdi/" target="_blank" rel="noopener">Iconify · MDI</a>.
+        </p>
+      </header>
+    </section>
+
+    <section class="section" aria-labelledby="h-config-snippet">
+      <header class="section__head">
+        <h2 id="h-config-snippet">Relevant <code>icon()</code> snippet</h2>
+        <p>Active in this demo (rest of options unchanged):</p>
+      </header>
+      <pre class="config-snippet"><code>{`icon({
+  // …iconDir, iconDirs…
+  include: {
+    mdi: ["home", "download"],
+  },
+})`}</code></pre>
+    </section>
+
+    <PageFooter current="iconify-subset" />
+  </main>
+</Base>
+
+<style>
+  .config-snippet {
+    margin: 0;
+    padding: 1rem 1.15rem;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.8rem;
+    line-height: 1.5;
+    overflow-x: auto;
+    color: var(--code);
+  }
+</style>
+
+<style is:global>
+  [data-icon="mdi:home"] {
+    color: #38bdf8;
+  }
+  [data-icon="mdi:download"] {
+    color: #a78bfa;
+  }
+</style>

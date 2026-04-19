@@ -80,7 +80,7 @@ This guide walks through replacing **`astro-icon`** with **`astro-iconset`** in 
 
 5. ### Replace any `Sprite` or `SpriteProvider` usage
 
-   astro-icon exposed a separate `Sprite` or sprite-provider pattern in some versions. astro-iconset handles sprites automatically inside the `Icon` component — there is no separate wrapper to add or remove.
+   astro-icon exposed a separate `Sprite` component or sprite-provider pattern in some versions. astro-iconset handles sprites automatically inside the `Icon` component — there is no separate wrapper to add or remove.
 
    Remove any `SpriteProvider` wrappers from your layouts. The `Icon` component itself emits `<symbol>` / `<use>` pairs when the same icon is used more than once on a page.
 
@@ -113,9 +113,29 @@ This guide walks through replacing **`astro-icon`** with **`astro-iconset`** in 
 
 8. ### Run a build and check for errors
 
+   <Tabs syncKey="package-manager">
+   <TabItem label="npm">
+
    ```sh
    npm run build
    ```
+
+   </TabItem>
+   <TabItem label="pnpm">
+
+   ```sh
+   pnpm build
+   ```
+
+   </TabItem>
+   <TabItem label="Yarn">
+
+   ```sh
+   yarn build
+   ```
+
+   </TabItem>
+   </Tabs>
 
    The build output will report any icon names it cannot resolve. Common causes:
 

@@ -56,6 +56,12 @@ Build the package and site together (as in root `scripts.build`):
 pnpm build
 ```
 
+```sh
+npm run build
+```
+
+The root script runs filtered builds for `astro-iconset` and `site`; it invokes **pnpm** internally, so [pnpm](https://pnpm.io) must be available on your `PATH`.
+
 Formatting:
 
 ```sh

@@ -3,30 +3,161 @@ title: Deployment & SSR bundles
 description: Optimize Astro Iconset for static and server-rendered deployments.
 ---
 
-Astro Iconset works with any [Astro deployment target](https://docs.astro.build/en/guides/deploy/). This page covers bundle size when using **server** or **hybrid** output.
+import { Aside, Tabs, TabItem } from "@astrojs/starlight/components";
+
+Astro Iconset works with any [Astro deployment target](https://docs.astro.build/en/guides/deploy/). This page covers how rendering mode affects icon resolution and how to keep server bundles small.
 
 ## Rendering modes
 
-Astro supports [several rendering modes](https://docs.astro.build/en/basics/rendering-mode/). Astro Iconset behaves as follows:
+Astro supports [three rendering modes](https://docs.astro.build/en/basics/rendering-mode/). Here is how Astro Iconset behaves in each:
 
-- **Static (pre-rendered) pages:** No special Iconify bundle tuning is required for most cases.
-- **On-demand (server) routes:** Iconify data from installed `@iconify-json/*` packages can be pulled into **server JavaScript** unless you limit what is included.
+| Mode                            | How icons are resolved                                                             | Bundle concern                                    |
+| ------------------------------- | ---------------------------------------------------------------------------------- | ------------------------------------------------- |
+| **Static** (`output: 'static'`) | All icons resolved at build time, embedded in HTML                                 | None — no server bundle                           |
+| **Hybrid** (`output: 'hybrid'`) | Pre-rendered routes resolved at build time; server routes resolved at request time | Only server routes need `include`                 |
+| **Server** (`output: 'server'`) | All icons resolved at request time from Iconify data in server bundle              | Configure `include` to avoid shipping entire sets |
 
-## Use `include` for server bundles
+## Static sites (no action needed)
 
-Configure **`include`** on the integration so only the Iconify icons you need are bundled for SSR. See the [`include` section](/reference/configuration/#include) in the configuration reference.
+For a fully static Astro site, icon resolution happens at build time. Every `<Icon>` becomes an SVG in your HTML output. No `include` configuration is needed.
 
-```js
-icon({
-  include: {
-    mdi: ["account", "home"],
-  },
+<Tabs syncKey="package-manager">
+<TabItem label="npm">
+
+```sh
+npm run build
+```
+
+</TabItem>
+<TabItem label="pnpm">
+
+```sh
+pnpm build
+```
+
+</TabItem>
+<TabItem label="Yarn">
+
+```sh
+yarn build
+```
+
+</TabItem>
+</Tabs>
+
+The `dist/` folder contains everything — no server JavaScript involved.
+
+## Server and hybrid output
+
+When using an SSR adapter, Iconify icon data from `@iconify-json/*` packages is included in the **server JavaScript bundle** by default. If you install large sets (e.g. `@iconify-json/mdi` with ~7,000 icons), all of them are bundled unless you restrict them with `include`.
+
+### Install an adapter
+
+<Tabs syncKey="package-manager">
+<TabItem label="npm">
+
+```sh
+# Vercel
+npm install @astrojs/vercel
+
+# Netlify
+npm install @astrojs/netlify
+
+# Node.js server
+npm install @astrojs/node
+```
+
+</TabItem>
+<TabItem label="pnpm">
+
+```sh
+pnpm add @astrojs/vercel
+pnpm add @astrojs/netlify
+pnpm add @astrojs/node
+```
+
+</TabItem>
+<TabItem label="Yarn">
+
+```sh
+yarn add @astrojs/vercel
+yarn add @astrojs/netlify
+yarn add @astrojs/node
+```
+
+</TabItem>
+</Tabs>
+
+### Full server output (`output: 'server'`)
+
+All routes are server-rendered. Use `include` to limit which Iconify icons ship in the bundle:
+
+```js title="astro.config.mjs"
+import { defineConfig } from "astro/config";
+import vercel from "@astrojs/vercel/serverless";
+import icon from "astro-iconset";
+
+export default defineConfig({
+  output: "server",
+  adapter: vercel(),
+  integrations: [
+    icon({
+      include: {
+        // Only ship the icons your server routes actually render
+        mdi: ["account", "home", "menu", "close"],
+        // To include a whole set (can be large):
+        // ri: ["*"],
+      },
+    }),
+  ],
 });
 ```
 
-This is especially important when many `@iconify-json/*` packages are installed.
+<Aside type="caution">
+  Without `include`, **all icons from every installed `@iconify-json/*`
+  package** are included in the server bundle. For large sets this can add
+  megabytes of JSON to your deployed function.
+</Aside>
 
-## Related guides
+### Hybrid output (`output: 'hybrid'`)
 
+Pre-rendered (static) routes resolve icons at build time. Only **server-rendered** routes need icons bundled. Configure `include` for the icons used on those routes:
+
+```js title="astro.config.mjs"
+import { defineConfig } from "astro/config";
+import node from "@astrojs/node";
+import icon from "astro-iconset";
+
+export default defineConfig({
+  output: "hybrid",
+  adapter: node({ mode: "standalone" }),
+  integrations: [
+    icon({
+      include: {
+        mdi: ["account", "logout"],
+      },
+    }),
+  ],
+});
+```
+
+Pages that use `export const prerender = true` are built statically — their icons do not need to be in `include`. Only the dynamic (non-prerendered) routes need it.
+
+## Icons work in `dev` but are missing in production
+
+The dev server resolves Iconify icons on demand from disk. The production server only serves what was bundled at build time via `include`. If an icon appears in dev but disappears in production, add it to the `include` map.
+
+```diff title="astro.config.mjs"
+icon({
+  include: {
+-   mdi: ["account"],
++   mdi: ["account", "settings"],  // add the missing icon
+  },
+}),
+```
+
+## Related
+
+- [`include` configuration option](/reference/configuration/#include) — full option reference
 - [Local & Iconify icons](/guides/customization/) — installing sets and referencing `set:icon`
-- [Configuration](/reference/configuration/) — full list of integration options
+- [Troubleshooting](/guides/troubleshooting/#server--ssr-deployments) — common SSR bundle problems

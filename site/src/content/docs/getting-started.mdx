@@ -95,10 +95,52 @@ If something does not work as expected, [open an issue](https://github.com/sudee
 
 ## Next steps
 
-- **[Local & Iconify icons](/guides/customization/)** — Iconify sets, `include` for SSR, and more.
+- **[Local & Iconify icons](/guides/customization/)** — Iconify sets, naming rules, `iconDir`, `iconDirs`.
 - **[SVG imports (`?icon`)](/guides/icon-imports/)** — Import a single file with `?icon` and pass `icon={…}`.
 - **[Components](/guides/components/)** — Props, sprites, and `is:inline`.
-- **[Configuration](/reference/configuration/)** — `iconDir`, `iconDirs`, `svgoOptions`.
+- **[Framework islands](/guides/frameworks/)** — `astro-iconset/react`, `/vue`, `/svelte`, `/preact`, `/solid`.
+- **[CSS & styling](/guides/styling/)** — `data-icon`, `currentColor`, Tailwind, accessibility.
+- **[Configuration](/reference/configuration/)** — All options with types and defaults.
+- **[Troubleshooting](/guides/troubleshooting/)** — Icon not found, wrong size, TypeScript errors, SSR issues.
+
+## Quick reference
+
+Most common patterns at a glance:
+
+```astro
+---
+import { Icon } from "astro-iconset/components";
+import logo from "../assets/logo.svg?icon";
+---
+
+<!-- Local SVG from src/icons/close.svg -->
+<Icon name="close" />
+
+<!-- Subfolder: src/icons/logos/astro.svg -->
+<Icon name="logos/astro" />
+
+<!-- Iconify set (needs @iconify-json/mdi installed) -->
+<Icon name="mdi:account" size={24} title="Account" />
+
+<!-- One-off SVG import -->
+<Icon icon={logo} title="Logo" />
+
+<!-- Always inline (no sprite) -->
+<Icon name="close" is:inline />
+
+<!-- Accessible decorative icon -->
+<Icon name="mdi:menu" class="size-5" aria-hidden="true" />
+```
+
+| Task                            | What to do                                                               |
+| ------------------------------- | ------------------------------------------------------------------------ |
+| Add a local icon                | Drop a `.svg` file in `src/icons/`                                       |
+| Use an Iconify icon             | Install `@iconify-json/<set>` then use `name="set:icon"`                 |
+| Use in React/Vue/Svelte         | Import from `astro-iconset/react` (or `/vue`, `/svelte`, etc.)           |
+| Change icon color               | Add `class="text-blue-500"` or `color` CSS — needs `currentColor` in SVG |
+| Change icon size                | Add `size={24}` or `width`/`height` props                                |
+| Fix TypeScript error on `?icon` | Add `/// <reference types="astro-iconset/svg-icon" />` to `src/env.d.ts` |
+| Shrink SSR bundle               | Add `include: { mdi: ["…"] }` to integration options                     |
 
 ## Updating Astro Iconset
 
@@ -132,4 +174,4 @@ See the [changelog](https://github.com/sudeep2003/astro-iconset/blob/main/packag
 
 ## Troubleshooting
 
-Use the [configuration reference](/reference/configuration/) and the guides in the sidebar. If the problem is Astro itself, the [Astro documentation](https://docs.astro.build) is the best place to start. For bugs and feature requests, use [GitHub issues](https://github.com/sudeep2003/astro-iconset/issues).
+See the **[Troubleshooting guide](/guides/troubleshooting/)** for solutions to common errors: icon not found, wrong size or color, TypeScript `?icon` errors, and SSR bundle issues. For Astro itself, start with the [Astro documentation](https://docs.astro.build). For bugs and feature requests, use [GitHub issues](https://github.com/sudeep2003/astro-iconset/issues).

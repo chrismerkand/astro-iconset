@@ -1,5 +1,16 @@
 # astro-iconset Changelog
 
+## 0.0.4
+
+### Patch
+
+- Fix: `size` no longer overrides an explicit `width` or `height` — it only fills the axis left unset.
+- Fix: failed icon-collection loads now abort the build instead of silently producing an empty icon map.
+- Fix: optional chaining on `tryGetHash` prevents a crash on a missing or empty `.astro/icon.d.ts`.
+- Framework `Icon` components (React, Preact, Vue, Svelte, Solid) now throw when both `name` and `icon` are provided, and warn in dev when `size` is mixed with `width`/`height`.
+- `?icon` imports now set `data-icon="astro-iconset:import"` for a consistent CSS hook.
+- Solid: `computed()` is called once per render instead of twice.
+
 ## 0.0.3
 
 ### Patch

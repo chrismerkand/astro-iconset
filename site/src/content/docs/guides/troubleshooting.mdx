@@ -1,0 +1,247 @@
+---
+title: Troubleshooting
+description: Solutions to common errors and unexpected behaviour with Astro Iconset.
+---
+
+import { Aside } from "@astrojs/starlight/components";
+
+This page covers the most common problems and how to fix them. If your issue is not listed here, [open an issue](https://github.com/sudeep2003/astro-iconset/issues) with a minimal reproduction.
+
+---
+
+## Build errors
+
+### "Icon not found: …"
+
+The integration could not locate an icon by the name you passed.
+
+**Common causes and fixes:**
+
+| Cause                                            | Fix                                                                                         |
+| ------------------------------------------------ | ------------------------------------------------------------------------------------------- |
+| File name does not match `name` prop             | `src/icons/close-x.svg` must be `name="close-x"`, not `name="close_x"`                      |
+| File is in a subfolder but `name` omits the path | `src/icons/logos/astro.svg` → `name="logos/astro"`                                          |
+| `iconDir` is set to a non-existent path          | Check the path in `astro.config.mjs` and confirm the folder exists                          |
+| Iconify icon name has a typo                     | Verify the exact `set:icon-name` on [Iconify Icon Sets](https://icon-sets.iconify.design/)  |
+| `@iconify-json/*` package is not installed       | Install the `@iconify-json/<set>` package (see [Local & Iconify icons](/guides/customization/)) |
+
+### Duplicate icon name across directories
+
+```
+Error: Duplicate icon key "logo" found in merged iconDir directories.
+```
+
+Two files in different directories passed to `iconDir` (array) share the same name. Rename one file, or use [`iconDirs`](/reference/configuration/#icondirs) with named prefixes so they never collide:
+
+```js title="astro.config.mjs"
+icon({
+  iconDirs: {
+    brand: "src/brand-icons",
+    ui: "src/ui-icons",
+  },
+});
+```
+
+Then reference them as `brand:logo` and `ui:logo`.
+
+### TypeScript error on `*.svg?icon` import
+
+```
+Cannot find module '../assets/logo.svg?icon' or its corresponding type declarations.
+```
+
+The package ships type definitions for `?icon` imports. Add them to your TypeScript setup using **one** of these two approaches:
+
+**Option A — `src/env.d.ts` (recommended for Astro projects):**
+
+```ts title="src/env.d.ts"
+/// <reference types="astro/client" />
+/// <reference types="astro-iconset/svg-icon" />
+```
+
+**Option B — `tsconfig.json` `types` array:**
+
+```json title="tsconfig.json"
+{
+  "compilerOptions": {
+    "types": ["astro-iconset/svg-icon"]
+  }
+}
+```
+
+After adding the reference, restart your TypeScript server (`Ctrl+Shift+P → TypeScript: Restart TS Server` in VS Code / Cursor).
+
+---
+
+## Prop conflicts
+
+### Both `name` and `icon` are passed
+
+Passing both props at the same time is not supported. `icon` takes priority and the `name` value is ignored. In dev mode a console warning is logged:
+
+```
+[astro-iconset] Use either "name" or "icon", not both. "icon" takes priority.
+```
+
+The Astro `Icon` component goes further and throws a hard build error:
+
+```
+Error: Use either "name" or "icon", not both.
+```
+
+**Fix:** Remove whichever prop you did not intend to use.
+
+```astro
+<!-- Correct: name only -->
+<Icon name="mdi:account" />
+
+<!-- Correct: icon only -->
+<Icon icon={importedIcon} />
+
+<!-- Wrong: both at once -->
+<Icon name="mdi:account" icon={importedIcon} />
+```
+
+### Both `size` and `width`/`height` are passed
+
+`size` is a shorthand that sets both `width` and `height` when neither is explicitly provided. If you also pass `width` or `height`, those explicit values take priority and `size` is used only as a fallback for the axis that was left unset. A dev-mode console warning is logged:
+
+```
+[astro-iconset] Use either "size" or "width"/"height", not both. "width"/"height" takes priority.
+```
+
+**Fix:** Use one or the other, not both.
+
+```astro
+<!-- Correct: size only (sets both axes to 32) -->
+<Icon name="mdi:account" size={32} />
+
+<!-- Correct: explicit width + height -->
+<Icon name="mdi:account" width={48} height={48} />
+
+<!-- Correct: mix intentionally (width=48, height falls back to size=32) -->
+<Icon name="mdi:account" size={32} width={48} />
+
+<!-- Avoid: likely a mistake — results in width=48, height=32 -->
+<Icon name="mdi:account" size={32} width={48} height={32} />
+```
+
+---
+
+## Icons render but look wrong
+
+### Icon is invisible or a blank box
+
+1. **The SVG uses a fixed `fill` colour** that matches your background. Try `fill="currentColor"` in the source SVG, or override it with `svgoOptions` (see [Configuration](/reference/configuration/#svgooptions)).
+2. **No `width`/`height`** — the element collapses to 0 × 0. Set `size`, `width`, or `height` on the component, or target `[data-icon]` with CSS dimensions.
+3. **The `@iconify-json/*` package is missing** — the icon resolves as empty. Install the set package.
+
+### Icon is the wrong size
+
+The `Icon` component defaults to the SVG's own `viewBox` dimensions. Override explicitly:
+
+```astro
+<Icon name="mdi:account" size={24} />
+<Icon name="mdi:account" width={32} height={32} />
+```
+
+Or in CSS:
+
+```css
+[data-icon] {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+```
+
+### Icon color does not change with `color` or Tailwind `text-*`
+
+The source SVG uses a hard-coded fill value instead of `currentColor`. Fix this with an SVGO plugin:
+
+```js title="astro.config.mjs"
+icon({
+  svgoOptions: {
+    plugins: [
+      {
+        name: "convertColors",
+        params: { currentColor: true },
+      },
+    ],
+  },
+});
+```
+
+This replaces any `fill` or `stroke` values with `currentColor` so CSS `color` controls the icon colour.
+
+### Sprite icon (`<use>`) does not pick up CSS in a `<style>` block
+
+Styles that target elements **inside** a `<use>` reference (such as `path` or `circle`) may not work as expected, because the referenced content is isolated from the outer document's styles. If `[data-icon="…"] path { … }` has no effect, use `:global(…)` to reach past the isolation:
+
+```astro
+<style>
+  :global([data-icon="logo"] path) {
+    stroke-width: 2;
+  }
+</style>
+```
+
+Or force inline rendering for that icon with `is:inline` to skip the sprite entirely:
+
+```astro
+<Icon name="logo" is:inline />
+```
+
+---
+
+## Framework islands
+
+### Icon from `astro-iconset/components` does not work inside a `.tsx` / `.vue` / `.svelte` file
+
+The Astro `Icon` component only works in `.astro` files. Use the framework-specific entry instead:
+
+```tsx
+import Icon from "astro-iconset/react"; // React / Preact
+import { Icon } from "astro-iconset/vue"; // Vue
+import Icon from "astro-iconset/svelte"; // Svelte
+import Icon from "astro-iconset/solid"; // Solid
+```
+
+See [Framework islands](/guides/frameworks/) for full setup.
+
+### Icon renders on server but is missing in the browser after hydration
+
+Framework icons render as **inline SVG** — there is no hydration problem in the traditional sense. If the icon disappears after hydration, check:
+
+1. The `client:*` directive is set on the island component wrapping the icon.
+2. The framework peer package (`react`, `vue`, etc.) is installed.
+3. The `@astrojs/*` framework integration is registered in `astro.config.mjs`.
+
+---
+
+## Server / SSR deployments
+
+### Server bundle is very large after adding Iconify sets
+
+Every installed `@iconify-json/*` package is included by default. Configure `include` to ship only what your server routes actually use:
+
+```js title="astro.config.mjs"
+icon({
+  include: {
+    mdi: ["account", "home", "menu"],
+  },
+});
+```
+
+See [Deployment & SSR bundles](/guides/deployment/) for more.
+
+### Iconify icons work in `dev` but are missing in the production server build
+
+This usually means the icons are not listed in `include`. The dev server resolves icons on demand; the production server only ships what is explicitly included. Add the missing icon names to the `include` map.
+
+---
+
+## Still stuck?
+
+- Check the [Configuration reference](/reference/configuration/) for option names and defaults.
+- Search [existing issues](https://github.com/sudeep2003/astro-iconset/issues) — the problem may already be answered.
+- [Open a new issue](https://github.com/sudeep2003/astro-iconset/issues/new) with your `astro.config.mjs`, the `name` value you used, and the error message or unexpected output.

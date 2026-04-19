@@ -45,6 +45,15 @@ if (icon && nameProp != null && String(nameProp).length > 0) {
   throw new AstroIconError('Use either "name" or "icon", not both.');
 }
 
+if (import.meta.env.DEV && (rest as Record<string, unknown>).size != null) {
+  const r = rest as Record<string, unknown>;
+  if (r.width != null || r.height != null) {
+    console.warn(
+      '[astro-iconset] Use either "size" or "width"/"height", not both. "width"/"height" takes priority.'
+    );
+  }
+}
+
 if (
   !icon &&
   (nameProp === undefined ||
@@ -81,9 +90,9 @@ if (icon) {
   const renderData = iconToSVG(icon);
   id = `ai:${importedCacheKey(icon)}`;
   const attrs = rest as Record<string, unknown>;
-  if (attrs.size) {
-    attrs.width = attrs.size;
-    attrs.height = attrs.size;
+  if (attrs.size != null) {
+    if (attrs.width == null) attrs.width = attrs.size;
+    if (attrs.height == null) attrs.height = attrs.size;
     delete attrs.size;
   }
   normalizedProps = {
@@ -172,9 +181,9 @@ if (icon) {
   id = `ai:${collection.prefix}:${iconName ?? setName}`;
 
   const attrs = rest as Record<string, unknown>;
-  if (attrs.size) {
-    attrs.width = attrs.size;
-    attrs.height = attrs.size;
+  if (attrs.size != null) {
+    if (attrs.width == null) attrs.width = attrs.size;
+    if (attrs.height == null) attrs.height = attrs.size;
     delete attrs.size;
   }
 

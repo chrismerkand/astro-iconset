@@ -69,7 +69,7 @@ import { Icon } from "astro-iconset/components";
 
 ## Scoped `<style>` in `.astro` files
 
-Styles in `<style>` are **scoped** by default. Selectors like `[data-icon]` still match the `Icon` output because Astro adds the scope to the **element**, not the attribute selector in a way that breaks attribute matching — but targeting **child** content inside the SVG can require **`:global(...)`** if you add deep rules.
+Styles in `<style>` are **scoped** by default. Selectors like `[data-icon]` still match the `Icon` output because Astro adds the scope attribute to the **element itself**, not to the attribute selector — so attribute-based selectors continue to work correctly. However, targeting **child elements inside the SVG** (such as `path` or `circle`) may require **`:global(...)`** to reach past Astro's scoping.
 
 ```astro
 <style>

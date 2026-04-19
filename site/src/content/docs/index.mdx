@@ -5,7 +5,7 @@ template: splash
 editUrl: false
 lastUpdated: false
 hero:
-  tagline: Local SVGs, Iconify, and optional sprites — optimized at build time, zero icon runtime in the browser.
+  tagline: Local SVGs, Iconify, sprites, and framework adapters — all optimized at build time with zero icon runtime in the browser.
   actions:
     - text: Get started
       link: /getting-started/
@@ -25,21 +25,37 @@ hero:
       variant: minimal
 ---
 
-import { Card, CardGrid } from '@astrojs/starlight/components';
+import { Card, CardGrid } from "@astrojs/starlight/components";
 
 ## What you get
 
+Icons are resolved, deduplicated, and optimized **when you build** — not loaded from a client-side icon pack. Here is the full surface area; **[Features](/features/)** has examples, comparisons, and deep dives.
+
 <CardGrid stagger>
-	<Card title="Local SVGs" icon="document">
-		Drop files in `src/icons/` (or configure other folders) and reference them by name. SVGO runs automatically.
+	<Card title="Local SVG files" icon="document">
+		Drop `.svg` files in `src/icons/` (or your own paths) and reference them by name. Subfolders work — e.g. `logos/astro` for `src/icons/logos/astro.svg`.
 	</Card>
-	<Card title="Iconify" icon="puzzle">
-		Install `@iconify-json/*` packages and use `set:icon-name` in the `name` prop — thousands of sets from [Iconify](https://iconify.design/).
+	<Card title="Iconify icon sets" icon="puzzle">
+		Install `@iconify-json/*` packages and use `set:icon-name` in `name` — thousands of sets via [Iconify](https://iconify.design/).
 	</Card>
-	<Card title="Imports" icon="add-document">
-		Use `*.svg?icon` when an SVG should not live in a shared icon directory — pass the result to `icon={…}`.
+	<Card title="Framework islands" icon="laptop">
+		`astro-iconset/react`, `/vue`, `/svelte`, `/preact`, and `/solid` for icons inside framework components, not only `.astro` files.
 	</Card>
-	<Card title="Frameworks" icon="laptop">
-		Use `astro-iconset/react`, `/vue`, `/svelte`, `/preact`, or `/solid` inside islands when you need icons in UI components.
+	<Card title="SVG imports (?icon)" icon="add-document">
+		Use `import logo from "../assets/logo.svg?icon"` and pass `icon={logo}` when a file should not live in a shared icon directory.
+	</Card>
+	<Card title="Sprites" icon="list-format">
+		Repeated uses of the same icon share `<symbol>` / `<use>` output automatically — smaller HTML on icon-heavy pages.
+	</Card>
+	<Card title="SVGO optimization" icon="approve-check">
+		Local SVGs pass through [SVGO](https://github.com/svg/svgo) at build time; tune behavior with `svgoOptions` in config.
+	</Card>
+	<Card title="Named icon directories" icon="open-book">
+		`iconDirs` maps prefixes to folders — e.g. `brand:logo` from `src/brand-icons/`. Mix multiple sets without collisions.
+	</Card>
+	<Card title="SSR bundle control" icon="setting">
+		For `server` or `hybrid` output, `include` limits which Iconify icons ship in server bundles so you do not pull in whole sets.
 	</Card>
 </CardGrid>
+
+**[Features →](/features/)** · **[Getting started →](/getting-started/)** · **[Configuration reference →](/reference/configuration/)**

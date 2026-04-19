@@ -25,6 +25,14 @@
   $: resolvedHeight = height ?? size;
 
   $: result = (() => {
+    if (icon != null && name != null) {
+      throw new Error('[astro-iconset] Use either "name" or "icon", not both.');
+    }
+    if (import.meta.env.DEV) {
+      if (size != null && (width != null || height != null)) {
+        console.warn('[astro-iconset] Use either "size" or "width"/"height", not both. "width"/"height" takes priority.');
+      }
+    }
     let body: string;
     let attrs: Record<string, string> = {};
 
@@ -63,7 +71,7 @@
   })();
 </script>
 
-<svg {...result.attrs} data-icon={icon ? undefined : name}>
+<svg {...result.attrs} data-icon={icon ? "astro-iconset:import" : name}>
   <!-- eslint-disable-next-line svelte/no-at-html-tags -->
   {@html result.inner}
 </svg>

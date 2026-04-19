@@ -25,15 +25,15 @@ Rendering happens on the **server**; there is no client-side icon runtime.
 
 You can pass **`name`** or **`icon`**, plus standard SVG attributes (including ARIA).
 
-| Prop | Type | Description |
-| --- | --- | --- |
-| `name` | `string` | Local slug (for example `logo` or `logos/astro`) or Iconify id (`mdi:account`) |
-| `icon` | `AstroIconImport` | Data from `import x from "*.svg?icon"` — mutually exclusive with `name` |
-| `title` | `string` | Adds a `<title>` for accessibility |
-| `desc` | `string` | Adds a `<desc>` when needed |
-| `size` | `number \| string` | Shorthand for `width` and `height` |
-| `width` / `height` | `number \| string` | Explicit dimensions |
-| `is:inline` | `boolean` | When `true`, inlines the SVG without the sprite `<symbol>` path |
+| Prop               | Type               | Description                                                                    |
+| ------------------ | ------------------ | ------------------------------------------------------------------------------ |
+| `name`             | `string`           | Local slug (for example `logo` or `logos/astro`) or Iconify id (`mdi:account`) |
+| `icon`             | `AstroIconImport`  | Data from `import x from "*.svg?icon"` — mutually exclusive with `name`        |
+| `title`            | `string`           | Adds a `<title>` for accessibility                                             |
+| `desc`             | `string`           | Adds a `<desc>` when needed                                                    |
+| `size`             | `number \| string` | Shorthand for `width` and `height`                                             |
+| `width` / `height` | `number \| string` | Explicit dimensions                                                            |
+| `is:inline`        | `boolean`          | When `true`, inlines the SVG without the sprite `<symbol>` path                |
 
 ```ts
 interface Props extends HTMLAttributes<"svg"> {
@@ -48,16 +48,46 @@ interface Props extends HTMLAttributes<"svg"> {
 }
 ```
 
-Use **`name`** or **`icon`**, not both.
+Use **`name`** or **`icon`**, not both. If both are passed, `icon` takes priority and a dev-mode warning is logged.
+
+When `size` and `width`/`height` are both provided, the explicit `width`/`height` values win and `size` is used only as a fallback for the axis that has no explicit value. A dev-mode warning is also logged.
 
 ### Sprites and `is:inline`
 
 By default, the first use of an icon on a page can emit a **`<symbol>`** and later uses reference it with **`<use>`**, which keeps HTML smaller when the same icon repeats.
 
-Set **`is:inline`** when you want full inline SVG without that sprite behavior (for example for a one-off or special cases).
+**Sprite output** (default — two uses of `"logo"` on one page):
+
+```html
+<!-- Emitted once, usually near the top of the page -->
+<svg aria-hidden="true" style="display:none">
+  <symbol id="ai:local:logo" viewBox="0 0 24 24">
+    <path d="…" />
+  </symbol>
+</svg>
+
+<!-- Every <Icon name="logo" /> after the first -->
+<svg data-icon="logo">
+  <use href="#ai:local:logo" />
+</svg>
+```
+
+**Inline output** (`is:inline` — always a full copy of the SVG):
+
+```html
+<svg data-icon="logo" viewBox="0 0 24 24">
+  <path d="…" />
+</svg>
+```
+
+Set **`is:inline`** when:
+
+- the icon only appears once on a page and you want a simpler DOM
+- you need to directly style inner SVG elements (paths, circles) with scoped CSS without `:global(…)`
+- you are generating static HTML where the `<symbol>` reference would be split across chunks
 
 <Aside type="tip">
-  For framework-specific `Icon` wrappers (React, Vue, Svelte, Preact, Solid), see [Framework islands](/guides/frameworks/).
+  For framework-specific `Icon` wrappers (React, Vue, Svelte, Preact, Solid), see [Framework islands](/guides/frameworks/). Framework icons always render inline — they do not use the sprite `<symbol>` / `<use>` pattern.
 </Aside>
 
 ### Example: `name` and Iconify

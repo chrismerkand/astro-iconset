@@ -3,7 +3,7 @@ title: Features
 description: Everything Astro Iconset can do — local SVGs, Iconify, framework islands, sprites, SVGO, and more.
 ---
 
-import { Card, CardGrid, Aside } from '@astrojs/starlight/components';
+import { Card, CardGrid, Aside, Tabs, TabItem } from '@astrojs/starlight/components';
 
 Astro Iconset is a **build-time SVG icon integration** for Astro. Icons are resolved, optimized, and inlined at build time — there is no client-side icon runtime shipped to the browser.
 
@@ -59,9 +59,29 @@ Configure a different directory, multiple directories, or named prefixes in the 
 
 Install any `@iconify-json/*` package and reference icons with the Iconify `set:icon-name` format.
 
+<Tabs syncKey="package-manager">
+<TabItem label="npm">
+
 ```sh
 npm install @iconify-json/mdi
 ```
+
+</TabItem>
+<TabItem label="pnpm">
+
+```sh
+pnpm add @iconify-json/mdi
+```
+
+</TabItem>
+<TabItem label="Yarn">
+
+```sh
+yarn add @iconify-json/mdi
+```
+
+</TabItem>
+</Tabs>
 
 ```astro
 <Icon name="mdi:account" size={24} title="Account" />
@@ -149,7 +169,7 @@ icon({
 <Icon name="flags:us" />
 ```
 
-See [Configuration](/reference/configuration/#icondirs) for details on `iconDir`, `iconDir` as an array, and `iconDirs`.
+See [Configuration](/reference/configuration/#icondirs) for details on `iconDir` (string), `iconDir` (array), and `iconDirs`.
 
 ---
 
