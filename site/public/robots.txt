@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://astro-iconset.wingflows.com/sitemap-index.xml

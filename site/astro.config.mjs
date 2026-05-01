@@ -11,6 +11,29 @@ export default defineConfig({
       title: 'Astro Iconset',
       description:
         'SVG icons for Astro — local files, Iconify, build-time optimization, and optional sprites.',
+      head: [
+        { tag: 'meta', attrs: { property: 'og:image', content: 'https://astro-iconset.wingflows.com/og-image.png' } },
+        { tag: 'meta', attrs: { property: 'og:image:width', content: '1200' } },
+        { tag: 'meta', attrs: { property: 'og:image:height', content: '630' } },
+        { tag: 'meta', attrs: { property: 'og:type', content: 'website' } },
+        { tag: 'meta', attrs: { name: 'twitter:card', content: 'summary_large_image' } },
+        { tag: 'meta', attrs: { name: 'twitter:image', content: 'https://astro-iconset.wingflows.com/og-image.png' } },
+        {
+          tag: 'script',
+          attrs: { type: 'application/ld+json' },
+          content: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'SoftwareApplication',
+            name: 'astro-iconset',
+            url: 'https://astro-iconset.wingflows.com',
+            applicationCategory: 'DeveloperApplication',
+            operatingSystem: 'Any',
+            description: 'SVG icons for Astro — local files, Iconify sets, and build-time optimization.',
+            license: 'https://opensource.org/licenses/MIT',
+            codeRepository: 'https://github.com/sudeep2003/astro-iconset',
+          }),
+        },
+      ],
       customCss: ['./src/styles/custom.css'],
       social: [
         {

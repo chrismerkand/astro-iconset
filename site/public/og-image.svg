@@ -1,0 +1,108 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#1e1b4b"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#818cf8"/>
+      <stop offset="100%" stop-color="#38bdf8"/>
+    </linearGradient>
+    <linearGradient id="iconGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#818cf8" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#38bdf8" stop-opacity="0.08"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bg)"/>
+
+  <!-- Subtle grid lines -->
+  <g stroke="#ffffff" stroke-opacity="0.03" stroke-width="1">
+    <line x1="0" y1="105" x2="1200" y2="105"/>
+    <line x1="0" y1="210" x2="1200" y2="210"/>
+    <line x1="0" y1="315" x2="1200" y2="315"/>
+    <line x1="0" y1="420" x2="1200" y2="420"/>
+    <line x1="0" y1="525" x2="1200" y2="525"/>
+    <line x1="200" y1="0" x2="200" y2="630"/>
+    <line x1="400" y1="0" x2="400" y2="630"/>
+    <line x1="600" y1="0" x2="600" y2="630"/>
+    <line x1="800" y1="0" x2="800" y2="630"/>
+    <line x1="1000" y1="0" x2="1000" y2="630"/>
+  </g>
+
+  <!-- Decorative large icon motif (top-right) -->
+  <g transform="translate(860, 60)" opacity="0.18">
+    <!-- Outer ring -->
+    <circle cx="180" cy="180" r="170" fill="none" stroke="url(#accent)" stroke-width="2"/>
+    <!-- SVG bracket shapes -->
+    <g fill="none" stroke="url(#accent)" stroke-width="14" stroke-linecap="round" stroke-linejoin="round">
+      <!-- < > symbols suggesting code/SVG -->
+      <polyline points="110,130 60,180 110,230"/>
+      <polyline points="250,130 300,180 250,230"/>
+      <!-- center slash -->
+      <line x1="195" y1="120" x2="165" y2="240"/>
+    </g>
+    <!-- Small dots -->
+    <circle cx="180" cy="20"  r="5" fill="#818cf8" opacity="0.6"/>
+    <circle cx="340" cy="180" r="5" fill="#38bdf8" opacity="0.6"/>
+    <circle cx="180" cy="340" r="5" fill="#818cf8" opacity="0.6"/>
+    <circle cx="20"  cy="180" r="5" fill="#38bdf8" opacity="0.6"/>
+  </g>
+
+  <!-- Accent bar -->
+  <rect x="80" y="200" width="6" height="80" rx="3" fill="url(#accent)"/>
+
+  <!-- Main title -->
+  <text
+    x="112" y="263"
+    font-family="ui-sans-serif, system-ui, -apple-system, sans-serif"
+    font-size="80"
+    font-weight="700"
+    letter-spacing="-2"
+    fill="#f1f5f9"
+  >Astro Iconset</text>
+
+  <!-- Tagline -->
+  <text
+    x="112" y="320"
+    font-family="ui-sans-serif, system-ui, -apple-system, sans-serif"
+    font-size="30"
+    font-weight="400"
+    fill="#94a3b8"
+    letter-spacing="0.5"
+  >SVG icons for Astro — local files, Iconify, build-time optimization</text>
+
+  <!-- Pill tags -->
+  <g font-family="ui-monospace, 'Cascadia Code', monospace" font-size="20" font-weight="500">
+    <!-- Tag 1 -->
+    <rect x="112" y="370" width="138" height="38" rx="19" fill="#1e40af" fill-opacity="0.5"/>
+    <text x="181" y="394" fill="#93c5fd" text-anchor="middle">Iconify</text>
+    <!-- Tag 2 -->
+    <rect x="264" y="370" width="168" height="38" rx="19" fill="#4c1d95" fill-opacity="0.5"/>
+    <text x="348" y="394" fill="#c4b5fd" text-anchor="middle">Sprites</text>
+    <!-- Tag 3 -->
+    <rect x="446" y="370" width="178" height="38" rx="19" fill="#065f46" fill-opacity="0.5"/>
+    <text x="535" y="394" fill="#6ee7b7" text-anchor="middle">Tree-shake</text>
+    <!-- Tag 4 -->
+    <rect x="638" y="370" width="144" height="38" rx="19" fill="#7c2d12" fill-opacity="0.5"/>
+    <text x="710" y="394" fill="#fdba74" text-anchor="middle">TypeSafe</text>
+  </g>
+
+  <!-- Bottom separator -->
+  <line x1="80" y1="540" x2="1120" y2="540" stroke="#ffffff" stroke-opacity="0.08" stroke-width="1"/>
+
+  <!-- Site URL -->
+  <text
+    x="112" y="579"
+    font-family="ui-monospace, 'Cascadia Code', monospace"
+    font-size="22"
+    fill="#475569"
+    letter-spacing="0.5"
+  >astro-iconset.wingflows.com</text>
+
+  <!-- Star / sparkle icon bottom-right -->
+  <g transform="translate(1080, 555)" fill="#818cf8" opacity="0.5">
+    <polygon points="20,0 24,14 38,14 27,23 31,37 20,28 9,37 13,23 2,14 16,14" transform="scale(0.7)"/>
+  </g>
+</svg>
