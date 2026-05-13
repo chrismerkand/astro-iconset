@@ -1,0 +1,83 @@
+/// <reference types="vite/client" />
+/// <reference path="../../typings/virtual.d.ts" />
+import { getIconData, iconToSVG, replaceIDs } from "@iconify/utils";
+import type { AstroIconCollectionMap } from "../../typings/integration";
+import type { AstroIconImport } from "../../typings/astro-icon-import";
+import collections_mod from "virtual:astro-iconset";
+
+const _collections = ((collections_mod as any).default ?? collections_mod) as AstroIconCollectionMap;
+
+export interface ResolveIconInput {
+  name?: string;
+  icon?: AstroIconImport;
+  size?: number | string;
+  width?: number | string;
+  height?: number | string;
+  title?: string;
+  desc?: string;
+}
+
+export interface ResolvedIcon {
+  attrs: Record<string, string>;
+  inner: string;
+  dataIcon: string;
+}
+
+function escapeHtml(s: string): string {
+  return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
+export function resolveIcon(input: ResolveIconInput, framework: string): ResolvedIcon {
+  const { name, icon, size, width, height, title, desc } = input;
+
+  if (icon != null && name != null) {
+    throw new Error('[astro-iconset] Use either "name" or "icon", not both.');
+  }
+  if (icon == null && name == null) {
+    throw new Error('[astro-iconset] Either "name" or "icon" must be provided.');
+  }
+  if (import.meta.env.DEV) {
+    if (size != null && (width != null || height != null)) {
+      console.warn('[astro-iconset] Use either "size" or "width"/"height", not both. "width"/"height" takes priority.');
+    }
+  }
+
+  const resolvedWidth = width ?? size;
+  const resolvedHeight = height ?? size;
+
+  let body: string;
+  let attrs: Record<string, string> = {};
+
+  if (icon) {
+    const renderData = iconToSVG(icon);
+    body = replaceIDs(renderData.body);
+    attrs = { ...(renderData.attributes as Record<string, string>) };
+  } else {
+    const iconName = name as string;
+    const colonIdx = iconName.indexOf(":");
+    const setName = colonIdx === -1 ? "local" : iconName.slice(0, colonIdx);
+    const iconKey = colonIdx === -1 ? iconName : iconName.slice(colonIdx + 1);
+
+    const collection = _collections[setName];
+    if (!collection)
+      throw new Error(`[astro-iconset/${framework}] Icon set "${setName}" not found. Available: ${Object.keys(_collections).join(", ")}`);
+
+    const iconData = getIconData(collection, iconKey);
+    if (!iconData)
+      throw new Error(`[astro-iconset/${framework}] Icon "${iconKey}" not found in set "${setName}".`);
+
+    const renderData = iconToSVG(iconData);
+    body = replaceIDs(renderData.body);
+    attrs = { ...(renderData.attributes as Record<string, string>) };
+  }
+
+  if (resolvedWidth != null) attrs.width = String(resolvedWidth);
+  if (resolvedHeight != null) attrs.height = String(resolvedHeight);
+
+  const inner =
+    (title ? `<title>${escapeHtml(title)}</title>` : "") +
+    (desc ? `<desc>${escapeHtml(desc)}</desc>` : "") +
+    body;
+
+  return { attrs, inner, dataIcon: icon ? "astro-iconset:import" : (name as string) };
+}

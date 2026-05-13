@@ -1,5 +1,12 @@
 # astro-iconset Changelog
 
+## 0.0.5
+
+### Patch
+
+- Refactor: icon-resolution logic extracted into a shared `core.ts` — eliminates duplication across all framework components.
+- Fix: throws a clear error when neither `name` nor `icon` is provided.
+
 ## 0.0.4
 
 ### Patch
