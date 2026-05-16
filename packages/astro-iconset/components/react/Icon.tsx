@@ -1,3 +1,4 @@
+/** @jsxRuntime automatic */
 /** @jsxImportSource react */
 import type { SVGProps } from "react";
 import type { AstroIconImport } from "../../typings/astro-icon-import";
