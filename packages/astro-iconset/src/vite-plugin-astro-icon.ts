@@ -134,6 +134,7 @@ export function createPlugin(
   ctx: PluginContext,
 ): Plugin {
   let collections: AstroIconCollectionMap | undefined;
+  let lastCollectionsHash: string | undefined;
   const { root } = ctx;
   const virtualModuleId = "virtual:astro-iconset";
   const resolvedVirtualModuleId = "\0" + virtualModuleId;
@@ -165,7 +166,13 @@ export function createPlugin(
       );
     }
 
-    logCollections(collections, ctx, { localLabel });
+    const currentHash = collectionsHash(Object.values(collections));
+
+    if (currentHash !== lastCollectionsHash) {
+      logCollections(collections, ctx, { localLabel });
+      lastCollectionsHash = currentHash;
+    }
+
     await generateIconTypeDefinitions(Object.values(collections), root);
   }
 
