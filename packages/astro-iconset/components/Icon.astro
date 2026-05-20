@@ -86,6 +86,20 @@ let normalizedBody: string;
 let viewBox: string | undefined;
 let id: string;
 
+const mod = (await import("virtual:astro-iconset")) as {
+  default: AstroIconCollectionMap;
+  config: {
+    include?: Record<string, ["*"] | string[]>;
+    dataAttr?: string | false;
+  };
+};
+
+const icons = mod.default;
+const config = mod.config;
+
+const dataAttrName =
+  config.dataAttr === false ? undefined : (config.dataAttr ?? "data-icon");
+
 if (icon) {
   const renderData = iconToSVG(icon);
   id = `ai:${importedCacheKey(icon)}`;
@@ -107,12 +121,6 @@ if (icon) {
     delete normalizedProps.viewBox;
   }
 } else {
-  const mod = (await import("virtual:astro-iconset")) as {
-    default: AstroIconCollectionMap;
-    config: { include?: Record<string, ["*"] | string[]> };
-  };
-  const icons = mod.default;
-  const config = mod.config;
   const name = nameProp as string;
   const { include = {} } = config;
   const sets = Object.keys(include);
@@ -200,9 +208,11 @@ if (icon) {
     delete normalizedProps.viewBox;
   }
 }
+
+const svgDataAttr = dataAttrName != null ? { [dataAttrName]: cacheKey } : {};
 ---
 
-<svg {...normalizedProps} data-icon={cacheKey}>
+<svg {...normalizedProps} {...svgDataAttr}>
   {title && <title>{title}</title>}
   {desc && <desc>{desc}</desc>}
   {
