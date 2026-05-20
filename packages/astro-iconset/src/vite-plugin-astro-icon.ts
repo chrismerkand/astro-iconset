@@ -138,7 +138,7 @@ export function createPlugin(
   const { root } = ctx;
   const virtualModuleId = "virtual:astro-iconset";
   const resolvedVirtualModuleId = "\0" + virtualModuleId;
-  const { include = {}, svgoOptions } = opts;
+  const { include = {}, svgoOptions, dataAttr = "data-icon" } = opts;
   const { localRootsAbs, namedDirs, watchRoots, localLabel } =
     resolveLocalIconConfig(opts, root);
 
@@ -231,7 +231,7 @@ export function createPlugin(
           ctx.logger.error(`[astro-iconset] Failed to load icon collections: ${message}`);
           throw new Error(`[astro-iconset] Build aborted: could not load icon collections. ${message}`);
         }
-        return `export default ${JSON.stringify(collections ?? {})};\nexport const config = ${JSON.stringify({ include, localIconSets })}`;
+        return `export default ${JSON.stringify(collections ?? {})};\nexport const config = ${JSON.stringify({ include, localIconSets, dataAttr })}`;
       }
     },
     configureServer(server) {

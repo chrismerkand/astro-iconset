@@ -24,12 +24,19 @@ export type IntegrationOptions = {
    * @default { plugins: ['preset-default'] }
    */
   svgoOptions?: SVGOOptions;
+  /**
+   * Attribute used to expose icon metadata on rendered SVGs.
+   * Set to false to disable.
+   * @default "data-icon"
+   */
+  dataAttr?: string | false;
 };
 
 /** Serialized into `virtual:astro-iconset` alongside `include`. */
 export type AstroIconVirtualConfig = Pick<IntegrationOptions, "include"> & {
   /** Prefixes for filesystem-backed sets: `local` (when configured) plus each `iconDirs` key except `local`. */
   localIconSets?: string[];
+  dataAttr: string | false;
 };
 
 export type IconCollection = IconifyJSON;

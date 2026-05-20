@@ -3,9 +3,11 @@
 import { getIconData, iconToSVG, replaceIDs } from "@iconify/utils";
 import type { AstroIconCollectionMap } from "../../typings/integration";
 import type { AstroIconImport } from "../../typings/astro-icon-import";
-import collections_mod from "virtual:astro-iconset";
+import collections_mod, { config } from "virtual:astro-iconset";
 
 const _collections = ((collections_mod as any).default ?? collections_mod) as AstroIconCollectionMap;
+
+const _config = config ?? {};
 
 export interface ResolveIconInput {
   name?: string;
@@ -20,7 +22,10 @@ export interface ResolveIconInput {
 export interface ResolvedIcon {
   attrs: Record<string, string>;
   inner: string;
-  dataIcon: string;
+  dataAttr?: {
+    name: string;
+    value: string;
+  };
 }
 
 function escapeHtml(s: string): string {
@@ -79,5 +84,15 @@ export function resolveIcon(input: ResolveIconInput, framework: string): Resolve
     (desc ? `<desc>${escapeHtml(desc)}</desc>` : "") +
     body;
 
-  return { attrs, inner, dataIcon: icon ? "astro-iconset:import" : (name as string) };
+  const dataIconValue = icon ? "astro-iconset:import" : (name as string);
+
+  const dataAttr =
+    _config.dataAttr === false
+      ? undefined
+      : {
+          name: _config.dataAttr ?? "data-icon",
+          value: dataIconValue,
+        };
+
+  return { attrs, inner, dataAttr };
 }
