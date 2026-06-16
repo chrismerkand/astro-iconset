@@ -11,7 +11,7 @@ import {
 } from "node:path";
 import { fileURLToPath } from "node:url";
 import { Buffer } from "node:buffer";
-import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { mkdir, readFile, stat, writeFile } from "node:fs/promises";
 import type { Plugin } from "vite";
 import type {
   AstroIconCollectionMap,
@@ -69,6 +69,9 @@ function resolveLocalIconConfig(opts: IntegrationOptions, root: URL) {
     );
   }
 
+  const localIsDefault =
+    iconDirs?.local === undefined && opts.iconDir === undefined;
+
   let localRelPaths: string[];
   if (iconDirs?.local !== undefined) {
     localRelPaths = [iconDirs.local];
@@ -115,7 +118,15 @@ function resolveLocalIconConfig(opts: IntegrationOptions, root: URL) {
   const localLabel =
     localRelPaths.length === 1 ? localRelPaths[0]! : localRelPaths.join(", ");
 
-  return { localRootsAbs, namedDirs, watchRoots, localLabel };
+  return { localRootsAbs, namedDirs, watchRoots, localLabel, localIsDefault };
+}
+
+async function directoryExists(path: string): Promise<boolean> {
+  try {
+    return (await stat(path)).isDirectory();
+  } catch {
+    return false;
+  }
 }
 
 function pathIsUnderAnyRoot(filePath: string, roots: string[]): boolean {
@@ -138,8 +149,9 @@ export function createPlugin(
   const virtualModuleId = "virtual:astro-iconset";
   const resolvedVirtualModuleId = "\0" + virtualModuleId;
   const { include = {}, svgoOptions } = opts;
-  const { localRootsAbs, namedDirs, watchRoots, localLabel } =
+  const { localRootsAbs, namedDirs, watchRoots, localLabel, localIsDefault } =
     resolveLocalIconConfig(opts, root);
+  const onWarn = (msg: string) => ctx.logger.warn(msg);
 
   async function loadFilesystemCollections(): Promise<void> {
     collections = await loadIconifyCollections({ root, include });
@@ -152,16 +164,41 @@ export function createPlugin(
       }
     }
 
-    if (localRootsAbs.length > 0) {
-      const local = await loadMergedLocalIconDirs(localRootsAbs, svgoOptions);
+    // Skip icon directories that don't exist instead of crashing the build.
+    // A missing *default* src/icons is silent (common pure-Iconify setup);
+    // a missing *explicitly configured* path is warned about.
+    const existingLocalRoots: string[] = [];
+    for (const dir of localRootsAbs) {
+      if (await directoryExists(dir)) {
+        existingLocalRoots.push(dir);
+      } else if (!localIsDefault) {
+        ctx.logger.warn(
+          `[astro-iconset] Local icon directory not found: "${dir}" — skipping.`,
+        );
+      }
+    }
+
+    if (existingLocalRoots.length > 0) {
+      const local = await loadMergedLocalIconDirs(
+        existingLocalRoots,
+        svgoOptions,
+        onWarn,
+      );
       collections["local"] = local;
     }
 
     for (const [prefix, absPath] of Object.entries(namedDirs)) {
+      if (!(await directoryExists(absPath))) {
+        ctx.logger.warn(
+          `[astro-iconset] Icon directory for "${prefix}" not found: "${absPath}" — skipping.`,
+        );
+        continue;
+      }
       collections[prefix] = await loadLocalCollectionFromDir(
         absPath,
         prefix,
         svgoOptions,
+        onWarn,
       );
     }
 
@@ -210,7 +247,7 @@ export function createPlugin(
         const filePath = Buffer.from(token, "base64url").toString("utf-8");
         this.addWatchFile(filePath);
         try {
-          const icon = await processSvgFile(filePath, svgoOptions);
+          const icon = await processSvgFile(filePath, svgoOptions, onWarn);
           return `export default ${JSON.stringify(icon)}`;
         } catch (ex) {
           ctx.logger.error(

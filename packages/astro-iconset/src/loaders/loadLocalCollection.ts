@@ -13,6 +13,7 @@ export async function loadLocalCollectionFromDir(
   dir: string,
   prefix: string,
   options: SVGOOptions = { plugins: ["preset-default"] },
+  onWarn: (msg: string) => void = console.warn,
 ): Promise<IconCollection> {
   const local = await importDirectory(dir, {
     prefix,
@@ -33,8 +34,10 @@ export async function loadLocalCollectionFromDir(
     try {
       await optimizeSvg(svg, options);
     } catch (err) {
-      console.error(`Error parsing ${name}:`, err);
-      local.remove(name);
+      const reason = err instanceof Error ? err.message : String(err);
+      onWarn(
+        `[astro-iconset] Could not optimize "${name}" (${reason}); keeping it as-is.`,
+      );
       return;
     }
     local.fromSVG(name, svg);
@@ -49,6 +52,7 @@ export async function loadLocalCollectionFromDir(
 export async function loadMergedLocalIconDirs(
   absoluteDirs: string[],
   options: SVGOOptions = { plugins: ["preset-default"] },
+  onWarn: (msg: string) => void = console.warn,
 ): Promise<IconCollection> {
   if (absoluteDirs.length === 0) {
     throw new Error(
@@ -56,12 +60,12 @@ export async function loadMergedLocalIconDirs(
     );
   }
   if (absoluteDirs.length === 1) {
-    return loadLocalCollectionFromDir(absoluteDirs[0]!, "local", options);
+    return loadLocalCollectionFromDir(absoluteDirs[0]!, "local", options, onWarn);
   }
 
   const parts: { root: string; data: IconCollection }[] = [];
   for (const root of absoluteDirs) {
-    const data = await loadLocalCollectionFromDir(root, "local", options);
+    const data = await loadLocalCollectionFromDir(root, "local", options, onWarn);
     parts.push({ root, data });
   }
 
