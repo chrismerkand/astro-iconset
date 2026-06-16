@@ -21,12 +21,21 @@ const rendered = computed(() =>
     "vue"
   )
 );
+
+const svgAttrs = computed(() => ({
+  ...rendered.value.attrs,
+  ...(rendered.value.dataAttr
+    ? {
+        [rendered.value.dataAttr.name]:
+          rendered.value.dataAttr.value,
+      }
+    : {}),
+}));
 </script>
 
 <template>
   <svg
-    v-bind="rendered.attrs"
-    :data-icon="rendered.dataIcon"
+    v-bind="svgAttrs"
     v-html="rendered.inner"
   />
 </template>

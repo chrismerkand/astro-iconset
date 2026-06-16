@@ -13,9 +13,13 @@
   export let desc: string | undefined = undefined;
 
   $: resolved = resolveIcon({ name: name as string | undefined, icon, size, width, height, title, desc }, "svelte");
+
+  $: dataAttrProps = resolved.dataAttr
+    ? { [resolved.dataAttr.name]: resolved.dataAttr.value }
+    : { };
 </script>
 
-<svg {...resolved.attrs} data-icon={resolved.dataIcon}>
+<svg {...resolved.attrs} {...dataAttrProps} {...$$restProps}>
   <!-- eslint-disable-next-line svelte/no-at-html-tags -->
   {@html resolved.inner}
 </svg>
