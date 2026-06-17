@@ -1,5 +1,14 @@
 # astro-iconset Changelog
 
+## 0.0.6
+
+### Patch
+
+- Resilient icon loading: missing icon directories and un-optimizable SVGs (e.g. embedded raster images) now warn instead of aborting the build.
+- Fix: `?icon` imports resolve through Vite, adding support for path aliases including tsconfig `paths` and `resolve.alias`.
+- Fix: deduplicate the "Loaded icons from …" dev log across SSR/client module evaluations.
+- New `dataAttr` integration option to rename (`dataAttr: "data-astro-icon"`) or disable (`dataAttr: false`) the `data-icon` attribute. Defaults to `data-icon` (backward compatible).
+
 ## 0.0.5
 
 ### Patch

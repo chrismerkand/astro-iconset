@@ -18,6 +18,18 @@ import logo from "../assets/logo.svg?icon";
 <Icon icon={logo} title="Site logo" />
 ```
 
+### Path aliases
+
+`?icon` imports resolve through Vite, so any path alias you configure works — including tsconfig `paths` and Vite `resolve.alias`:
+
+```astro
+---
+import logo from "@/assets/logo.svg?icon"; // tsconfig "paths" or Vite resolve.alias
+---
+
+<Icon icon={logo} title="Site logo" />
+```
+
 ## TypeScript
 
 The package ships type definitions for `*.svg?icon` imports. Add them using **one** of these two approaches:

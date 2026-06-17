@@ -16,6 +16,10 @@ When you use **`name`**, the root `<svg>` gets **`data-icon="<value>"`**:
 
 When you use **`icon`** (`*.svg?icon`), **`data-icon` is not set** — use a **`class`**, **`id`**, or wrapper element for selectors.
 
+<Aside type="tip">
+  The attribute name is configurable: set [`dataAttr`](/reference/configuration/#dataattr) to rename it (for example `data-astro-icon`) or to `false` to remove it. Examples here assume the default `data-icon`.
+</Aside>
+
 ```astro title="src/pages/example.astro"
 ---
 import { Icon } from "astro-iconset/components";

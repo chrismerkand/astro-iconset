@@ -137,14 +137,7 @@ dist
 
 
 .vscode
-docs/plan-*
 sandbox.config.json
-
-packages/core/*.md
-
-PLAN.md
 REFERENCES.md
-FRAMEWORKS.md
-GAPS.md
 TESTING.md
 ISSUES.md
