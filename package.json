@@ -6,6 +6,8 @@
   "scripts": {
     "build": "pnpm --filter astro-iconset --filter site run build",
     "dev": "pnpm -r run dev",
+    "test": "pnpm --filter astro-iconset run test",
+    "test:coverage": "pnpm --filter astro-iconset run test:coverage",
     "lint": "prettier --check \"**/*.{js,ts,md,json}\"",
     "format": "prettier --write \"**/*.{js,ts,md,json}\"",
     "version": "changeset version && pnpm install --no-frozen-lockfile --lockfile-only"
@@ -29,6 +31,6 @@
     "@changesets/cli": "^2.18.1"
   },
   "devDependencies": {
-    "prettier": "^3.1.1"
+    "prettier": "^3.8.4"
   }
 }

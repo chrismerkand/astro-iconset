@@ -3,7 +3,7 @@ title: Configuration Reference
 description: Configuration options for the Astro Iconset integration.
 ---
 
-import { Aside } from "@astrojs/starlight/components";
+import { Aside, Badge } from "@astrojs/starlight/components";
 
 ## Configure the `icon` integration
 
@@ -184,3 +184,29 @@ export default defineConfig({
   [Troubleshooting](/guides/troubleshooting/#icon-color-does-not-change-with-color-or-tailwind-text)
   for more.
 </Aside>
+
+---
+
+### `dataAttr`
+
+<Badge text="New" variant="tip" />
+
+**Type:** `string | false`  
+**Default:** `"data-icon"`
+
+The data attribute added to each rendered icon. It identifies the icon and acts as a CSS hook (`[data-icon]`, `[data-icon="mdi:account"]`). Pass a custom name to rename it, or `false` to omit it entirely.
+
+```js {7}
+import { defineConfig } from "astro/config";
+import icon from "astro-iconset";
+
+export default defineConfig({
+  integrations: [
+    icon({
+      dataAttr: "data-astro-icon", // rename — or set `false` to remove it
+    }),
+  ],
+});
+```
+
+The default `"data-icon"` is backward compatible — leave it unset unless you need a different attribute name or want to drop it. See [CSS &amp; styling](/guides/styling/) for how the attribute is used in selectors.

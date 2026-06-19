@@ -223,6 +223,16 @@ icon({
 
 To use only `iconDirs` for the default local set, set `iconDirs.local` instead of `iconDir`. Do not set both `iconDir` and `iconDirs.local`.
 
+### `dataAttr`
+
+The data attribute added to each rendered icon for CSS targeting. Defaults to `"data-icon"`. Pass a custom string to rename it, or `false` to remove it entirely.
+
+```js
+icon({
+  dataAttr: "data-astro-icon", // or false to disable
+});
+```
+
 ### `svgoOptions`
 
 Override default SVGO behavior. See [SVGO configuration](https://github.com/svg/svgo#configuration).

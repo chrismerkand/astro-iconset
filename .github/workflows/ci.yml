@@ -27,3 +27,22 @@ jobs:
           cache: 'pnpm'
       - run: pnpm install
       - run: pnpm -r build
+
+  test:
+    name: Unit Tests (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        # Windows is intentionally included: several path/URL bugs only surface
+        # when the project path contains spaces or uses backslashes.
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'pnpm'
+      - run: pnpm install
+      - run: pnpm --filter astro-iconset run test

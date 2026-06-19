@@ -22,7 +22,7 @@ const Icon: Component<IconProps> = (rawProps) => {
     "name", "icon", "size", "width", "height", "title", "desc",
   ]);
 
-  const { attrs, inner, dataIcon } = resolveIcon(
+  const { attrs, inner, dataAttr } = resolveIcon(
     {
       name: local.name as string | undefined,
       icon: local.icon,
@@ -39,7 +39,9 @@ const Icon: Component<IconProps> = (rawProps) => {
     <svg
       {...(attrs as JSX.SvgSVGAttributes<SVGSVGElement>)}
       {...rest}
-      data-icon={dataIcon}
+      {...(dataAttr
+        ? { [dataAttr.name]: dataAttr.value }
+        : {})}
       innerHTML={inner}
     />
   );

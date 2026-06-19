@@ -18,7 +18,7 @@ type IconProps =
 
 export default function Icon(props: IconProps) {
   const { name, icon, size, width, height, title, desc, ...rest } = props;
-  const { attrs, inner, dataIcon } = resolveIcon(
+  const { attrs, inner, dataAttr } = resolveIcon(
     { name: name as string | undefined, icon, size, width: width as number | string | undefined, height: height as number | string | undefined, title, desc },
     "react"
   );
@@ -27,7 +27,9 @@ export default function Icon(props: IconProps) {
     <svg
       {...(attrs as SVGProps<SVGSVGElement>)}
       {...rest}
-      data-icon={dataIcon}
+      {...(dataAttr
+        ? { [dataAttr.name]: dataAttr.value }
+        : {})}
       dangerouslySetInnerHTML={{ __html: inner }}
     />
   );

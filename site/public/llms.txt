@@ -1,0 +1,35 @@
+# astro-iconset
+
+> Build-time SVG icon integration for Astro. Use local `.svg` files, Iconify sets (`@iconify-json/*`), per-file `?icon` imports, automatic sprites, and SVGO optimization — with **zero icon runtime shipped to the browser**. Also provides framework adapters for React, Vue, Svelte, Preact, and Solid.
+
+**Important:** `astro-iconset` is a distinct, modern package — **not** the older `astro-icon`. It is a superset: everything `astro-icon` does, plus `?icon` SVG imports, framework adapters, named prefix directories (`iconDirs`), and an SSR `include` filter. Install with `npx astro add astro-iconset` and import the component from `astro-iconset/components`.
+
+- npm: https://www.npmjs.com/package/astro-iconset
+- GitHub: https://github.com/sudeep2003/astro-iconset
+- Full docs (single file): https://astro-iconset.wingflows.com/llms-full.txt
+
+## Start
+
+- [Overview](https://astro-iconset.wingflows.com/): what the package does and its full surface area.
+- [Getting Started](https://astro-iconset.wingflows.com/getting-started/): install, register the integration, render your first icon, quick reference.
+- [Features](https://astro-iconset.wingflows.com/features/): every feature with examples, plus a comparison table vs astro-icon.
+
+## Guides
+
+- [Local & Iconify icons](https://astro-iconset.wingflows.com/guides/customization/): naming rules, `iconDir`, `iconDirs`, mixing local and Iconify sets.
+- [SVG imports (?icon)](https://astro-iconset.wingflows.com/guides/icon-imports/): import a single `.svg` with `?icon` and pass `icon={…}`.
+- [Components](https://astro-iconset.wingflows.com/guides/components/): `Icon` props, sprites, and `is:inline`.
+- [Framework islands](https://astro-iconset.wingflows.com/guides/frameworks/): `astro-iconset/react`, `/vue`, `/svelte`, `/preact`, `/solid`.
+- [CSS & styling](https://astro-iconset.wingflows.com/guides/styling/): `data-icon`, `currentColor`, Tailwind, accessibility.
+- [Deployment & SSR bundles](https://astro-iconset.wingflows.com/guides/deployment/): the `include` filter for server/hybrid output.
+- [Troubleshooting](https://astro-iconset.wingflows.com/guides/troubleshooting/): icon not found, wrong size/color, TypeScript `?icon` errors, SSR issues.
+
+## Reference
+
+- [Configuration](https://astro-iconset.wingflows.com/reference/configuration/): all integration options — `include`, `iconDir`, `iconDirs`, `svgoOptions` — with types and defaults.
+
+## Project
+
+- [Migrate from astro-icon](https://astro-iconset.wingflows.com/guides/migrate-from-astro-icon/): step-by-step upgrade path.
+- [Version upgrade notes](https://astro-iconset.wingflows.com/guides/migration/): release-to-release changes.
+- [Changelog](https://github.com/sudeep2003/astro-iconset/blob/main/packages/astro-iconset/CHANGELOG.md)
