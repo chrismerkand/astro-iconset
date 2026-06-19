@@ -11,7 +11,7 @@ import {
 } from "node:path";
 import { fileURLToPath } from "node:url";
 import { Buffer } from "node:buffer";
-import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { mkdir, readFile, stat, writeFile } from "node:fs/promises";
 import type { Plugin } from "vite";
 import type {
   AstroIconCollectionMap,
@@ -69,6 +69,9 @@ function resolveLocalIconConfig(opts: IntegrationOptions, root: URL) {
     );
   }
 
+  const localIsDefault =
+    iconDirs?.local === undefined && opts.iconDir === undefined;
+
   let localRelPaths: string[];
   if (iconDirs?.local !== undefined) {
     localRelPaths = [iconDirs.local];
@@ -115,7 +118,15 @@ function resolveLocalIconConfig(opts: IntegrationOptions, root: URL) {
   const localLabel =
     localRelPaths.length === 1 ? localRelPaths[0]! : localRelPaths.join(", ");
 
-  return { localRootsAbs, namedDirs, watchRoots, localLabel };
+  return { localRootsAbs, namedDirs, watchRoots, localLabel, localIsDefault };
+}
+
+async function directoryExists(path: string): Promise<boolean> {
+  try {
+    return (await stat(path)).isDirectory();
+  } catch {
+    return false;
+  }
 }
 
 function pathIsUnderAnyRoot(filePath: string, roots: string[]): boolean {
@@ -134,12 +145,14 @@ export function createPlugin(
   ctx: PluginContext,
 ): Plugin {
   let collections: AstroIconCollectionMap | undefined;
+  let lastCollectionsHash: string | undefined;
   const { root } = ctx;
   const virtualModuleId = "virtual:astro-iconset";
   const resolvedVirtualModuleId = "\0" + virtualModuleId;
-  const { include = {}, svgoOptions } = opts;
-  const { localRootsAbs, namedDirs, watchRoots, localLabel } =
+  const { include = {}, svgoOptions, dataAttr = "data-icon" } = opts;
+  const { localRootsAbs, namedDirs, watchRoots, localLabel, localIsDefault } =
     resolveLocalIconConfig(opts, root);
+  const onWarn = (msg: string) => ctx.logger.warn(msg);
 
   async function loadFilesystemCollections(): Promise<void> {
     collections = await loadIconifyCollections({ root, include });
@@ -152,20 +165,51 @@ export function createPlugin(
       }
     }
 
-    if (localRootsAbs.length > 0) {
-      const local = await loadMergedLocalIconDirs(localRootsAbs, svgoOptions);
+    // Skip icon directories that don't exist instead of crashing the build.
+    // A missing *default* src/icons is silent (common pure-Iconify setup);
+    // a missing *explicitly configured* path is warned about.
+    const existingLocalRoots: string[] = [];
+    for (const dir of localRootsAbs) {
+      if (await directoryExists(dir)) {
+        existingLocalRoots.push(dir);
+      } else if (!localIsDefault) {
+        ctx.logger.warn(
+          `[astro-iconset] Local icon directory not found: "${dir}" — skipping.`,
+        );
+      }
+    }
+
+    if (existingLocalRoots.length > 0) {
+      const local = await loadMergedLocalIconDirs(
+        existingLocalRoots,
+        svgoOptions,
+        onWarn,
+      );
       collections["local"] = local;
     }
 
     for (const [prefix, absPath] of Object.entries(namedDirs)) {
+      if (!(await directoryExists(absPath))) {
+        ctx.logger.warn(
+          `[astro-iconset] Icon directory for "${prefix}" not found: "${absPath}" — skipping.`,
+        );
+        continue;
+      }
       collections[prefix] = await loadLocalCollectionFromDir(
         absPath,
         prefix,
         svgoOptions,
+        onWarn,
       );
     }
 
-    logCollections(collections, ctx, { localLabel });
+    const currentHash = collectionsHash(Object.values(collections));
+
+    if (currentHash !== lastCollectionsHash) {
+      logCollections(collections, ctx, { localLabel });
+      lastCollectionsHash = currentHash;
+    }
+
     await generateIconTypeDefinitions(Object.values(collections), root);
   }
 
@@ -177,7 +221,7 @@ export function createPlugin(
   return {
     name: "astro-iconset",
     enforce: "pre",
-    resolveId(id, importer) {
+    async resolveId(id, importer) {
       if (id === virtualModuleId) {
         return resolvedVirtualModuleId;
       }
@@ -188,17 +232,14 @@ export function createPlugin(
       const clean = stripQuery(id);
       if (!clean.endsWith(".svg")) return;
 
-      let abs: string;
-      if (isAbsolute(clean)) {
-        abs = normalize(clean);
-      } else if (importer) {
-        const base = importer.startsWith("file:")
-          ? fileURLToPath(new URL(importer))
-          : importer;
-        abs = normalize(resolve(dirname(base), clean));
-      } else {
+      // Let Vite resolve aliases, tsconfig paths, etc.
+      const resolved = await this.resolve(clean, importer, {
+        skipSelf: true,
+      });
+      if (!resolved) {
         return;
       }
+      const abs = normalize(resolved.id);
 
       const token = Buffer.from(abs, "utf-8").toString("base64url");
       return `\0icon-import:${token}`;
@@ -210,7 +251,7 @@ export function createPlugin(
         const filePath = Buffer.from(token, "base64url").toString("utf-8");
         this.addWatchFile(filePath);
         try {
-          const icon = await processSvgFile(filePath, svgoOptions);
+          const icon = await processSvgFile(filePath, svgoOptions, onWarn);
           return `export default ${JSON.stringify(icon)}`;
         } catch (ex) {
           ctx.logger.error(
@@ -227,7 +268,7 @@ export function createPlugin(
           ctx.logger.error(`[astro-iconset] Failed to load icon collections: ${message}`);
           throw new Error(`[astro-iconset] Build aborted: could not load icon collections. ${message}`);
         }
-        return `export default ${JSON.stringify(collections ?? {})};\nexport const config = ${JSON.stringify({ include, localIconSets })}`;
+        return `export default ${JSON.stringify(collections ?? {})};\nexport const config = ${JSON.stringify({ include, localIconSets, dataAttr })}`;
       }
     },
     configureServer(server) {
