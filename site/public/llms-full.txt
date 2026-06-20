@@ -210,6 +210,8 @@ Every icon rendered with `name` gets a `data-icon` attribute matching the icon n
 [data-icon="mdi:account"] { color: var(--color-brand); }
 ```
 
+Rename this attribute with the `dataAttr` option (e.g. `dataAttr: "data-astro-icon"`) if `data-icon` collides with another library, or set `dataAttr: false` to disable it. See the `dataAttr` entry under Configuration Reference.
+
 ### SSR bundle control
 
 For `output: 'server'` or `'hybrid'`, all icons from every installed Iconify set may be pulled into the server bundle. Restrict with `include`:
@@ -295,6 +297,20 @@ icon({
   },
 })
 ```
+
+### `dataAttr`
+
+- **Type:** `string | false`
+- **Default:** `"data-icon"`
+
+Name of the data attribute exposed on every rendered icon SVG (set to the icon name, e.g. `mdi:home`). Use it to rename the attribute when `data-icon` clashes with another UI library (such as shadcn/ui), or set it to `false` to disable the attribute entirely. Applies across all renderers — Astro, React, Vue, Svelte, Preact, and Solid.
+
+```js
+icon({ dataAttr: "data-astro-icon" }) // <svg data-astro-icon="mdi:home" />
+icon({ dataAttr: false })             // no data attribute emitted
+```
+
+If you rename the attribute, update your CSS selectors to match (e.g. `[data-astro-icon] { … }`).
 
 ---
 
