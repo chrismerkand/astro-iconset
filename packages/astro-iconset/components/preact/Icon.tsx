@@ -1,3 +1,4 @@
+/** @jsxRuntime automatic */
 /** @jsxImportSource preact */
 import type { JSX } from "preact";
 import type { AstroIconImport } from "../../typings/astro-icon-import";
