@@ -2,11 +2,13 @@
 import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
 import sitemap from '@astrojs/sitemap';
+import icon from 'astro-iconset';
 
 // https://starlight.astro.build/reference/configuration/
 export default defineConfig({
   site: 'https://astro-iconset.wingflows.com',
   integrations: [
+    icon(),
     starlight({
       title: 'Astro Iconset',
       description:
@@ -34,7 +36,29 @@ export default defineConfig({
           }),
         },
       ],
-      customCss: ['./src/styles/custom.css'],
+      customCss: [
+        '@fontsource-variable/space-grotesk',
+        '@fontsource/ibm-plex-mono/400.css',
+        '@fontsource/ibm-plex-mono/500.css',
+        '@fontsource/ibm-plex-mono/600.css',
+        '@fontsource/ibm-plex-mono/700.css',
+        './src/styles/custom.css',
+      ],
+      components: {
+        Hero: './src/components/Hero.astro',
+        SiteTitle: './src/components/SiteTitle.astro',
+      },
+      expressiveCode: {
+        themes: ['github-dark', 'github-light'],
+        styleOverrides: {
+          borderRadius: '0.85rem',
+          codeFontFamily:
+            "'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, monospace",
+          codeFontSize: '0.8125rem',
+          codeBackground: ({ theme }) =>
+            theme.type === 'dark' ? '#0d1017' : '#f4f6fb',
+        },
+      },
       social: [
         {
           icon: 'github',
