@@ -1,15 +1,5 @@
 ---
 /**
  * Intentionally empty — this renders nothing on purpose.
- *
- * It's registered as Starlight's `Hero` override (astro.config.mjs) purely to
- * suppress the default hero on the splash homepage, which supplies its own
- * `<Landing />` in the page body instead. Starlight only mounts <Hero /> when a
- * page has `hero:` frontmatter, so an empty component = no hero.
- *
- * This override is GLOBAL. Any page with populated `hero:` frontmatter
- * (currently 404.md) also renders nothing here — its hero content is dropped.
- * If such a page needs a real hero, this file must conditionally render
- * Starlight's default Hero instead of staying empty.
  */
 ---
