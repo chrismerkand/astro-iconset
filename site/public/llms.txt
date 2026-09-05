@@ -26,7 +26,7 @@
 
 ## Reference
 
-- [Configuration](https://astro-iconset.wingflows.com/reference/configuration/): all integration options — `include`, `iconDir`, `iconDirs`, `svgoOptions` — with types and defaults.
+- [Configuration](https://astro-iconset.wingflows.com/reference/configuration/): all integration options — `include`, `iconDir`, `iconDirs`, `svgoOptions`, `dataAttr` — with types and defaults.
 
 ## Project
 
