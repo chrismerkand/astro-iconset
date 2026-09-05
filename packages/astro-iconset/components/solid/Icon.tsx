@@ -59,7 +59,7 @@ const Icon: Component<IconProps> = (rawProps) => {
 
   return (
     <svg
-      viewBox={symbolViewBox || attrs.viewBox}
+      {...attrs}
       {...rest}
       {...dataProps}
       innerHTML={innerHtml}

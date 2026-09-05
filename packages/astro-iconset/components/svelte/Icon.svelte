@@ -45,7 +45,7 @@
 </svg>
 {:else}
 <svg
-  viewBox={resolved.symbolViewBox || resolved.attrs.viewBox}
+  {...resolved.attrs}
   {...$$restProps}
   {...dataAttrObj}
 >

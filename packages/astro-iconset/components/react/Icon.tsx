@@ -49,7 +49,7 @@ export default function Icon(props: IconProps) {
 
   return (
     <svg
-      viewBox={symbolViewBox || attrs.viewBox}
+      {...(attrs as SVGProps<SVGSVGElement>)}
       {...rest}
       {...dataProps}
       dangerouslySetInnerHTML={{ __html: html }}

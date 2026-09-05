@@ -71,7 +71,7 @@ function mergeAttrs(
     v-else
     v-bind="
       mergeAttrs(
-        { viewBox: rendered.symbolViewBox || rendered.attrs.viewBox },
+        rendered.attrs,
         rendered.dataAttr,
         $attrs,
       )
