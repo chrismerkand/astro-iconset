@@ -1,20 +1,312 @@
 /**
- * Astro Iconset docs — accent and light polish on top of Starlight.
+ * Astro Iconset docs — custom dark/light theme layered on Starlight.
  * https://starlight.astro.build/guides/css-and-tailwind/#custom-css-styles
+ * Fonts: Space Grotesk (display/headings), IBM Plex Mono (code), system-ui (body).
  */
+
+/* ---------------------------------------------------------------- *
+ * Brand tokens (theme-independent)
+ * ---------------------------------------------------------------- */
 :root {
-	--sl-color-accent-low: hsl(192, 45%, 22%);
-	--sl-color-accent: hsl(192, 85%, 42%);
-	--sl-color-accent-high: hsl(192, 88%, 78%);
+	--brand-1: #10b981;
+	--brand-2: #a3e635;
+	--grad: linear-gradient(135deg, var(--brand-1), var(--brand-2));
+	--grad-h: linear-gradient(90deg, var(--brand-1), var(--brand-2));
+	--link: color-mix(in oklab, var(--brand-1) 55%, var(--brand-2));
+	--display: 'Space Grotesk Variable', var(--sl-font);
 }
 
+/* ---------------------------------------------------------------- *
+ * Dark theme (Starlight default = :root)
+ * ---------------------------------------------------------------- */
+:root {
+	/* fonts */
+	--sl-font: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif;
+	--sl-font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, monospace;
+
+	/* neutral ramp: white (headings) -> gray -> black (bg) */
+	--sl-color-white: #f4f6fc;
+	--sl-color-gray-1: #e2e6f0;
+	--sl-color-gray-2: #c9d0e2; /* body text */
+	--sl-color-gray-3: #9aa3ba; /* muted */
+	--sl-color-gray-4: #6c7488; /* dim */
+	--sl-color-gray-5: #2a3042;
+	--sl-color-gray-6: #0e1119; /* nav / sidebar surface */
+	--sl-color-gray-7: #0b0e15;
+	--sl-color-black: #0a0c12;
+
+	/* backgrounds */
+	--sl-color-bg: #0a0c12;
+	--sl-color-bg-nav: color-mix(in srgb, #0e1119 88%, transparent);
+	--sl-color-bg-sidebar: #0e1119;
+	--sl-color-bg-inline-code: rgba(160, 174, 208, 0.09);
+
+	/* hairlines */
+	--sl-color-hairline-light: rgba(160, 174, 208, 0.15);
+	--sl-color-hairline: rgba(160, 174, 208, 0.09);
+	--sl-color-hairline-shade: rgba(160, 174, 208, 0.05);
+
+	/* accent (green) */
+	--sl-color-accent-low: #10281f;
+	--sl-color-accent: #10b981;
+	--sl-color-accent-high: #6ee7a8;
+	--sl-color-text-accent: var(--link);
+
+	/* callouts / asides */
+	--sl-color-blue: #58a6ff;
+	--sl-color-blue-high: #cfe1ff;
+	--sl-color-blue-low: color-mix(in srgb, #58a6ff 10%, var(--sl-color-bg));
+	--sl-color-purple: #bc8cff;
+	--sl-color-purple-high: #e6d6ff;
+	--sl-color-purple-low: color-mix(in srgb, #bc8cff 10%, var(--sl-color-bg));
+	--sl-color-orange: #e3b341;
+	--sl-color-orange-high: #f6dfa0;
+	--sl-color-orange-low: color-mix(in srgb, #e3b341 10%, var(--sl-color-bg));
+	--sl-color-red: #f47272;
+	--sl-color-red-high: #ffd0d0;
+	--sl-color-red-low: color-mix(in srgb, #f47272 10%, var(--sl-color-bg));
+	--sl-color-green: #3fb950;
+	--sl-color-green-high: #b7f0be;
+	--sl-color-green-low: color-mix(in srgb, #3fb950 10%, var(--sl-color-bg));
+}
+
+/* ---------------------------------------------------------------- *
+ * Light theme
+ * ---------------------------------------------------------------- */
 :root[data-theme='light'] {
-	--sl-color-accent-low: hsl(192, 55%, 88%);
-	--sl-color-accent: hsl(192, 78%, 38%);
-	--sl-color-accent-high: hsl(192, 85%, 22%);
+	--sl-color-white: #0d1220; /* headings */
+	--sl-color-gray-1: #1e2536;
+	--sl-color-gray-2: #353e55; /* body text */
+	--sl-color-gray-3: #4b5468; /* muted */
+	--sl-color-gray-4: #8a92a6; /* dim */
+	--sl-color-gray-5: #d7dcea;
+	--sl-color-gray-6: #ffffff;
+	--sl-color-gray-7: #f7f8fd;
+	--sl-color-black: #ffffff;
+
+	--sl-color-bg: #f7f8fd;
+	--sl-color-bg-nav: color-mix(in srgb, #ffffff 88%, transparent);
+	--sl-color-bg-sidebar: #ffffff;
+	--sl-color-bg-inline-code: rgba(20, 30, 70, 0.05);
+
+	--sl-color-hairline-light: rgba(20, 30, 70, 0.14);
+	--sl-color-hairline: rgba(20, 30, 70, 0.06);
+	--sl-color-hairline-shade: rgba(20, 30, 70, 0.04);
+
+	--sl-color-accent-low: #cdefd9;
+	--sl-color-accent: #0f9d6e;
+	--sl-color-accent-high: #0a5c40;
+	--sl-color-text-accent: #0a7f57;
+
+	--sl-color-blue: #0969da;
+	--sl-color-blue-high: #0a3a7a;
+	--sl-color-blue-low: color-mix(in srgb, #0969da 7%, #ffffff);
+	--sl-color-purple: #8250df;
+	--sl-color-purple-high: #4c1d95;
+	--sl-color-purple-low: color-mix(in srgb, #8250df 7%, #ffffff);
+	--sl-color-orange: #9a6700;
+	--sl-color-orange-high: #6b4700;
+	--sl-color-orange-low: color-mix(in srgb, #9a6700 8%, #ffffff);
+	--sl-color-red: #cf222e;
+	--sl-color-red-high: #7a0c14;
+	--sl-color-red-low: color-mix(in srgb, #cf222e 7%, #ffffff);
+	--sl-color-green: #1a7f37;
+	--sl-color-green-high: #0f5726;
+	--sl-color-green-low: color-mix(in srgb, #1a7f37 8%, #ffffff);
 }
 
-/* Slightly softer hero on splash */
-[data-template='splash'] .hero {
-	padding-block: clamp(2.5rem, 6vw, 4rem);
+/* ---------------------------------------------------------------- *
+ * Display font for headings + brand type
+ * ---------------------------------------------------------------- */
+.sl-markdown-content :is(h1, h2, h3, h4),
+[data-page-title],
+.hero h1 {
+	font-family: var(--display);
+	letter-spacing: -0.02em;
+}
+
+/* ---------------------------------------------------------------- *
+ * Content typography scale
+ * ---------------------------------------------------------------- */
+.sl-markdown-content {
+	font-size: 1.0625rem;
+	line-height: 1.7;
+	color: var(--sl-color-gray-3);
+}
+
+[data-page-title],
+.sl-markdown-content h1 {
+	font-family: var(--display);
+	font-size: 2.625rem;
+	font-weight: 700;
+	line-height: 1.1;
+	letter-spacing: -0.02em;
+	color: var(--sl-color-white);
+}
+
+.sl-markdown-content h2 {
+	font-family: var(--display);
+	font-size: 1.75rem;
+	font-weight: 700;
+	line-height: 1.25;
+	letter-spacing: -0.015em;
+	color: var(--sl-color-white);
+}
+
+.sl-markdown-content h3 {
+	font-family: var(--display);
+	font-size: 1.375rem;
+	font-weight: 600;
+	line-height: 1.3;
+	letter-spacing: -0.01em;
+	color: var(--sl-color-white);
+}
+
+.sl-markdown-content h4 {
+	font-family: var(--display);
+	font-weight: 600;
+	letter-spacing: -0.01em;
+	color: var(--sl-color-white);
+}
+
+/* Body links: hover brightens to heading white */
+.sl-markdown-content a:hover {
+	color: var(--sl-color-white);
+}
+
+::selection {
+	background: color-mix(in srgb, var(--brand-1) 35%, transparent);
+}
+
+/* ---------------------------------------------------------------- *
+ * Header: translucent + blurred
+ * ---------------------------------------------------------------- */
+.header {
+	backdrop-filter: blur(12px);
+	/* -webkit-backdrop-filter: blur(12px); */
+}
+
+/* ---------------------------------------------------------------- *
+ * Gradient text utility (used by the hero headline via set:html)
+ * ---------------------------------------------------------------- */
+.grad-text {
+	background: var(--grad-h);
+	-webkit-background-clip: text;
+	background-clip: text;
+	-webkit-text-fill-color: transparent;
+	color: transparent;
+}
+
+/* ---------------------------------------------------------------- *
+ * Hero primary CTA -> gradient pill with glow (LinkButton .primary)
+ * ---------------------------------------------------------------- */
+.hero .sl-link-button.primary {
+	background: var(--grad);
+	border-color: transparent;
+	color: #ffffff;
+	border-radius: 0.75rem;
+	font-family: var(--display);
+	font-weight: 600;
+	box-shadow: 0 4px 24px color-mix(in srgb, var(--brand-1) 45%, transparent);
+	transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+.hero .sl-link-button.primary:hover {
+	color: #ffffff;
+	transform: translateY(-1px);
+	box-shadow: 0 6px 30px color-mix(in srgb, var(--brand-1) 55%, transparent);
+}
+.hero .sl-link-button.minimal {
+	border-radius: 0.75rem;
+}
+
+/* ---------------------------------------------------------------- *
+ * Callouts / asides: rounded card with accent left border
+ * ---------------------------------------------------------------- */
+.starlight-aside {
+	border-radius: 0.75rem;
+	border-inline-start-width: 3px;
+	padding: 1rem 1.125rem;
+}
+
+/* ---------------------------------------------------------------- *
+ * Code blocks (Expressive Code): rounded card + macOS traffic-light bar
+ * ---------------------------------------------------------------- */
+.expressive-code .frame {
+	border-radius: 0.85rem;
+	overflow: hidden;
+}
+.expressive-code figure.frame {
+	box-shadow: 0 16px 48px rgba(0, 0, 0, 0.24);
+	border: 1px solid var(--sl-color-hairline-light);
+}
+
+/* Traffic-light bar on top of every code card */
+.expressive-code figure.frame::before {
+	content: '';
+	display: block;
+	height: 2.375rem;
+	background: var(--code-bar, #11141d);
+	border-bottom: 1px solid var(--sl-color-hairline);
+	/* three dots at the left */
+	background-image:
+		radial-gradient(circle 5px at 20px 50%, #ff5f57 96%, transparent),
+		radial-gradient(circle 5px at 40px 50%, #febc2e 96%, transparent),
+		radial-gradient(circle 5px at 60px 50%, #28c840 96%, transparent);
+	background-repeat: no-repeat;
+}
+
+/* When EC renders its own header (title/terminal), overlap it onto the bar
+   so the filename sits next to the dots instead of adding a second bar. */
+.expressive-code figure.frame .header {
+	background: transparent;
+	border: 0;
+	margin-top: -2.375rem;
+	height: 2.375rem;
+	padding-inline-start: 5rem;
+	justify-content: flex-start;
+	font-family: var(--sl-font-mono);
+	font-size: 0.75rem;
+	color: var(--sl-color-gray-4);
+}
+.expressive-code figure.frame.has-title .header .title {
+	background: transparent;
+	border: 0;
+	color: var(--sl-color-gray-4);
+}
+.expressive-code figure.frame.has-title .header .title::before,
+.expressive-code figure.frame.has-title .header .title::after {
+	display: none;
+}
+/* EC terminal frames already draw dots — hide them, we draw our own */
+.expressive-code figure.frame.is-terminal .header::before {
+	display: none;
+}
+
+:root {
+	--code-bar: #11141d;
+}
+:root[data-theme='light'] {
+	--code-bar: #eceff7;
+}
+
+/* Cards (landing CardGrid) pick up the rounded surface */
+.card {
+	border-radius: 0.85rem;
+}
+
+/* Full-bleed custom landing inside the splash markdown wrapper.
+   Scope the widening to ONLY the landing's content panel so the header keeps
+   its own padding; sections self-center at their own max-widths. */
+.content-panel:has(.landing) {
+	padding-inline: 0;
+}
+.content-panel:has(.landing) .sl-container {
+	max-width: none;
+}
+.sl-markdown-content:has(.landing) {
+	max-width: none;
+	margin: 0;
+}
+.sl-markdown-content > .landing:first-child {
+	margin-top: -1.5rem;
 }

@@ -4,58 +4,11 @@ description: SVG icons for Astro — local files, Iconify sets, and build-time o
 template: splash
 editUrl: false
 lastUpdated: false
-hero:
-  tagline: Local SVGs, Iconify, sprites, and framework adapters — all optimized at build time with zero icon runtime in the browser.
-  actions:
-    - text: Get started
-      link: /getting-started/
-      icon: right-arrow
-      variant: primary
-    - text: Features
-      link: /features/
-      icon: list-format
-      variant: minimal
-    - text: Configuration
-      link: /reference/configuration/
-      icon: document
-      variant: minimal
-    - text: GitHub
-      link: https://github.com/sudeep2003/astro-iconset
-      icon: external
-      variant: minimal
+prev: false
+next: false
+hero: {}
 ---
 
-import { Card, CardGrid } from "@astrojs/starlight/components";
+import Landing from "../../components/Landing.astro";
 
-## What you get
-
-Icons are resolved, deduplicated, and optimized **when you build** — not loaded from a client-side icon pack. Here is the full surface area; **[Features](/features/)** has examples, comparisons, and deep dives.
-
-<CardGrid stagger>
-	<Card title="Local SVG files" icon="document">
-		Drop `.svg` files in `src/icons/` (or your own paths) and reference them by name. Subfolders work — e.g. `logos/astro` for `src/icons/logos/astro.svg`.
-	</Card>
-	<Card title="Iconify icon sets" icon="puzzle">
-		Install `@iconify-json/*` packages and use `set:icon-name` in `name` — thousands of sets via [Iconify](https://iconify.design/).
-	</Card>
-	<Card title="Framework islands" icon="laptop">
-		`astro-iconset/react`, `/vue`, `/svelte`, `/preact`, and `/solid` for icons inside framework components, not only `.astro` files.
-	</Card>
-	<Card title="SVG imports (?icon)" icon="add-document">
-		Use `import logo from "../assets/logo.svg?icon"` and pass `icon={logo}` when a file should not live in a shared icon directory.
-	</Card>
-	<Card title="Sprites" icon="list-format">
-		Repeated uses of the same icon share `<symbol>` / `<use>` output automatically — smaller HTML on icon-heavy pages.
-	</Card>
-	<Card title="SVGO optimization" icon="approve-check">
-		Local SVGs pass through [SVGO](https://github.com/svg/svgo) at build time; tune behavior with `svgoOptions` in config.
-	</Card>
-	<Card title="Named icon directories" icon="open-book">
-		`iconDirs` maps prefixes to folders — e.g. `brand:logo` from `src/brand-icons/`. Mix multiple sets without collisions.
-	</Card>
-	<Card title="SSR bundle control" icon="setting">
-		For `server` or `hybrid` output, `include` limits which Iconify icons ship in server bundles so you do not pull in whole sets.
-	</Card>
-</CardGrid>
-
-**[Features →](/features/)** · **[Getting started →](/getting-started/)** · **[Configuration reference →](/reference/configuration/)**
+<Landing />
