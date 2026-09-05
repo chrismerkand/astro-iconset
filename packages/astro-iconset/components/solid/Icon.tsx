@@ -1,3 +1,4 @@
+/** @jsxRuntime automatic */
 /** @jsxImportSource solid-js */
 import type { JSX, Component } from "solid-js";
 import { splitProps } from "solid-js";
